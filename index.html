@@ -872,7 +872,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.124</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.125</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -3378,6 +3378,11 @@ function bankInfo(){ const bk = dqBank(), n = bk.length, ni = bk.filter(x => x &
      setTimeout(() => ta.focus(), 30);
     } else {
      galEditing.delete(r.id);
+     { const ab = btn(aiBusy.has(r.id) ? '⏳ 답변 중' : '🤖 AI 답변', () => {
+        if (aiBusy.has(r.id)) return;
+        if (r.a && !confirm('지금 답변을 AI의 새 답변으로 바꿀까요?')) return;
+        if (askAI(r)){ ab.disabled = true; ab.textContent = '⏳ 답변 중'; }
+       }); ab.title = '이 질문의 답을 AI에게 맡겨요'; ab.setAttribute('aria-label', 'AI에게 답 받기'); }
      btn('수정', () => setMode(true));
      { const db = btn('🗑 삭제', () => { if (!confirm('이 기록을 삭제할까요?\n되돌릴 수 없어요.')) return; recs = recs.filter(x => x.id !== r.id); delete galDraft[r.id]; galEdit.delete(r.id); galEditing.delete(r.id); saveRecs(); toast('삭제했어요'); backEd(); }); db.classList.add('gdel'); }
      btn('닫기', backEd);
