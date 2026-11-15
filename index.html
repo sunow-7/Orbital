@@ -872,7 +872,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.125</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.126</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -3393,15 +3393,35 @@ function bankInfo(){ const bk = dqBank(), n = bk.length, ni = bk.filter(x => x &
    const mai = document.createElement('button'); mai.type = 'button'; mai.className = 'send-btn'; mai.style.cssText += ';background:linear-gradient(135deg,#7b61ff,#a77bff)'; mai.textContent = '🤖'; mai.setAttribute('aria-label', '등록하고 AI가 답 쓰기'); mai.title = '질문으로 등록하고 AI에게 답을 맡겨요';
    const mb = document.createElement('button'); mb.type = 'submit'; mb.className = 'send-btn'; mb.textContent = '➤'; mb.setAttribute('aria-label', '등록'); mf.append(mi, mai, mb);
    mi.addEventListener('input', () => { mi.style.height = 'auto'; mi.style.height = Math.min(mi.scrollHeight, 96) + 'px'; });
+   const act = document.createElement('div'); act.style.cssText = 'display:none;flex:none;gap:8px;padding:6px 2px 4px;flex-wrap:wrap'; let actT = 0;
+   const goNew = nr => { edStack.push({id: r.id, editing: galEditing.has(r.id)}); document.querySelectorAll('.gov').forEach(x => { if (x.dataset.rid === r.id) x.remove(); });
+    galEdit.delete(r.id); galEditing.delete(r.id); galEdit.add(nr.id); galEditing.add(nr.id); renderGal(); };
+   /* ➤로 질문만 등록했을 때: 필기시험 창처럼 바로 아래에 고르기 줄을 띄운다 (새 창에서 답 쓰기 / AI에게 맡기기) */
+   const showAct = (nr, done) => {
+    act.innerHTML = ''; act.style.display = 'flex'; clearTimeout(actT); actT = setTimeout(() => { act.style.display = 'none'; }, 90000);
+    const lab = document.createElement('div'); lab.style.cssText = 'flex:1 0 100%;font-size:12.5px;line-height:1.5;color:var(--tx-2);overflow-wrap:anywhere'; lab.textContent = '🧠 등록한 질문: ' + nr.q.slice(0, 90) + (nr.q.length > 90 ? '…' : ''); act.append(lab);
+    const mk = (t, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'm-mini'; b.textContent = t; b.onclick = fn; act.append(b); return b; };
+    if (done){ lab.textContent = '✓ AI가 답을 채웠어요 · ' + nr.q.slice(0, 60); mk('📖 새 창에서 보기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); }); mk('닫기', () => { clearTimeout(actT); act.style.display = 'none'; }); return; }
+    mk('📝 새 창에서 답 쓰기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); });
+    const ab = mk('🤖 AI에게 맡기기', () => {
+     if (!syncCfg.url){ toast('⚙ 설정 → ☁️ 구글에 백업 URL을 먼저 저장해 주세요', 5000); return; }
+     ab.disabled = true; ab.textContent = '🤖 답을 쓰는 중…'; clearTimeout(actT);
+     const pr = '다음 질문에 한국어로 아래 [답변 형식]대로만 답하세요. 모르는 것을 지어내지 말고, 공식·수치는 정확히 쓰세요.\n\n[보던 기록] ' + String(r.q || '').slice(0, 300) + '\n\n[질문] ' + nr.q + FLOW_RULE + MATH_RULE;
+     aiAsk(pr, 'gemini').catch(e => { if (e.message === 'NOURL') throw e; return aiAsk(pr, 'groq'); }).then(res => {
+      const cur = recs.find(x => x.id === nr.id); if (!cur) return; cur.a = (String(res.answer || '').trim() + '\n\n(🤖 AI 답변 · 틀릴 수 있으니 확인하세요)').slice(0, 8000); cur.updated = new Date().toISOString(); saveRecs(); try { renderMem(); } catch(e) {} try { renderGal(); } catch(e) {}
+      toast('🤖 AI가 답을 채웠어요', 3500);
+      { const o = [...document.querySelectorAll('.gov')].find(x => x.dataset.rid === r.id); if (o && o.__showAct) o.__showAct(nr, true); }
+     }).catch(e => { if (ab.isConnected){ ab.disabled = false; ab.textContent = '🤖 AI에게 맡기기'; } toast(e.message === 'NOURL' ? '⚙ 설정 → ☁️ 구글에 백업 URL을 먼저 저장해 주세요' : '⚠ AI 답을 받지 못했어요 · ' + String(e.message).slice(0, 60), 6000); });
+    });
+    mk('닫기', () => { clearTimeout(actT); act.style.display = 'none'; });
+   };
    const regMemo = useAI => { const t = mi.value.trim(); if (!t) return; const nr = saveMemQ(t, useAI, {cat: r.cat, linkTo: r.id});
     if (nr){ mi.value = ''; mi.style.height = 'auto'; toast('🧠 이 기록과 이어 붙여 질문으로 등록했어요' + (useAI ? ' · AI가 답을 쓰는 중' : ''), 4000);
-     /* ➤로 질문만 등록했다면: 새 창으로 옮겨 답을 이어서 쓸지 묻는다 (뒤로 가기 → 지금 질문으로 복귀) */
-     if (!useAI && !nr.a && confirm('질문을 등록했어요.\n\n“' + nr.q.slice(0, 60) + (nr.q.length > 60 ? '…' : '') + '”\n\n새 창으로 이동해서 답변을 입력할까요?\n(뒤로 가기를 누르면 지금 질문으로 돌아와요)')){
-      edStack.push({id: r.id, editing: galEditing.has(r.id)}); document.querySelectorAll('.gov').forEach(x => { if (x.dataset.rid === r.id) x.remove(); });
-      galEdit.delete(r.id); galEditing.delete(r.id); galEdit.add(nr.id); galEditing.add(nr.id); renderGal(); } } };
+     if (!useAI && !nr.a){ /* saveMemQ가 목록을 다시 그리면서 이 창도 새로 만들어졌을 수 있어, 지금 떠 있는 같은 기록 창에 띄운다 */
+      const o = [...document.querySelectorAll('.gov')].find(x => x.dataset.rid === r.id); if (o && o.__showAct) o.__showAct(nr); else showAct(nr); } } };
    mf.addEventListener('submit', e => { e.preventDefault(); regMemo(false); }); mai.onclick = () => regMemo(true);
    mi.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229 && matchMedia('(pointer:fine)').matches){ e.preventDefault(); regMemo(false); } });
-   ov.append(row, rv, qIn, ta, cwrap, mf); document.body.append(ov); fitVV();
+   ov.__showAct = showAct; ov.append(row, rv, qIn, ta, cwrap, act, mf); document.body.append(ov); fitVV();
    if (!edPushed){ edPushed = true; try { history.pushState(Object.assign(stateOf(), {ed: 1}), ''); } catch(e) { edPushed = false; } }
    setMode(galEditing.has(r.id) || !r.a);
   } else if (r.a){
