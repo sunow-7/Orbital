@@ -329,7 +329,7 @@ html.qz-lock .bottom-chat{visibility:hidden}
 .preview:empty{display:none}
 .m-find{border:0;background:transparent;color:var(--tx-2);font-size:13px;padding:0 2px}
 .m-find:hover{color:var(--accent);text-decoration:underline}
-.toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:rgba(30,45,68,.94);color:#fff;padding:11px 17px;border-radius:14px;font-size:13px;display:none;z-index:30;max-width:90vw;text-align:center;pointer-events:none;box-shadow:0 12px 32px rgba(20,40,70,.35)}
+.toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:rgba(30,45,68,.94);color:#fff;padding:11px 17px;border-radius:14px;font-size:13px;display:none;z-index:20000;max-width:90vw;text-align:center;pointer-events:none;box-shadow:0 12px 32px rgba(20,40,70,.35)}
 .modal-backdrop{position:fixed;inset:0;background:var(--scrim);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px;z-index:40}
 .modal{width:100%;max-width:390px;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--glass-brd);border-radius:24px;background:var(--surf);padding:20px;box-shadow:0 28px 80px rgba(24,50,80,.32)}
 .modal h3{margin:0 0 14px;font-size:17px;letter-spacing:-.01em}
@@ -872,7 +872,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.126</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.127</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -1032,7 +1032,9 @@ html[data-mode="dark"][data-theme="taegeuk"]{
  const NAMES = {ai:'바로질문 Gemini', 'ai-groq':'바로질문 Groq', groq:'Groq', summary:'요약 정리', google:'구글', naver:'네이버', chatgpt:'ChatGPT', gemini:'Gemini', claude:'Claude', none:'기억 찾기'};
  const TAGCOL = ['#35a9f5','#39b5a8','#e58a25','#9b87e8','#e0709a','#6f9be0','#7fb048'];
  const tagColor = t => { let h = 0; for (const c of t) h = (h*31 + c.charCodeAt(0)) >>> 0; return TAGCOL[h % TAGCOL.length]; };
- function toast(msg, ms=2600){ const el = $('toast'); el.textContent = msg; el.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => el.style.display = 'none', ms); }
+ function toast(msg, ms=2600){ const el = $('toast'); el.textContent = msg; el.style.display = 'block';
+  /* 전체 화면 창(기록·퀴즈)이 열려 있으면 아래 입력줄·버튼을 가리지 않게 위쪽에 띄운다 */
+  if (document.querySelector('.gov, .qz')){ el.style.top = '72px'; el.style.bottom = 'auto'; } else { el.style.top = ''; el.style.bottom = ''; } clearTimeout(toast.t); toast.t = setTimeout(() => el.style.display = 'none', ms); }
 
  const stripC = t => String(t || '').replace(/\{[rbgh]:([^{}\n]+)\}/g, '$1');
  /*MATH_START*/
@@ -3305,6 +3307,7 @@ function bankInfo(){ const bk = dqBank(), n = bk.length, ni = bk.filter(x => x &
   }
  }
  const galEditing = new Set(); let edPushed = false;
+ let galAnsFor = null;   /* 기록 창에서 '답 직접 쓰기' 중인 질문 {rid: 지금 보는 기록, nid: 답을 쓸 새 질문} */
  const edStack = [];   /* '새 창으로 이동'해 온 질문 길: 뒤로 가기를 누르면 바로 앞 질문 창으로 돌아간다 */
  function closeEd(){
   let prev = edStack.pop(); while (prev && !recs.some(x => x.id === prev.id)) prev = edStack.pop();
@@ -3393,35 +3396,50 @@ function bankInfo(){ const bk = dqBank(), n = bk.length, ni = bk.filter(x => x &
    const mai = document.createElement('button'); mai.type = 'button'; mai.className = 'send-btn'; mai.style.cssText += ';background:linear-gradient(135deg,#7b61ff,#a77bff)'; mai.textContent = '🤖'; mai.setAttribute('aria-label', '등록하고 AI가 답 쓰기'); mai.title = '질문으로 등록하고 AI에게 답을 맡겨요';
    const mb = document.createElement('button'); mb.type = 'submit'; mb.className = 'send-btn'; mb.textContent = '➤'; mb.setAttribute('aria-label', '등록'); mf.append(mi, mai, mb);
    mi.addEventListener('input', () => { mi.style.height = 'auto'; mi.style.height = Math.min(mi.scrollHeight, 96) + 'px'; });
-   const act = document.createElement('div'); act.style.cssText = 'display:none;flex:none;gap:8px;padding:6px 2px 4px;flex-wrap:wrap'; let actT = 0;
-   const goNew = nr => { edStack.push({id: r.id, editing: galEditing.has(r.id)}); document.querySelectorAll('.gov').forEach(x => { if (x.dataset.rid === r.id) x.remove(); });
+   const act = document.createElement('div'); act.style.cssText = 'display:none;flex:none;gap:8px;padding:6px 2px 4px;flex-wrap:wrap'; let actT = 0, ansRec = null;
+   const live = () => [...document.querySelectorAll('.gov')].find(x => x.dataset.rid === r.id);
+   const goNew = nr => { galAnsFor = null; edStack.push({id: r.id, editing: galEditing.has(r.id)}); document.querySelectorAll('.gov').forEach(x => { if (x.dataset.rid === r.id) x.remove(); });
     galEdit.delete(r.id); galEditing.delete(r.id); galEdit.add(nr.id); galEditing.add(nr.id); renderGal(); };
-   /* ➤로 질문만 등록했을 때: 필기시험 창처럼 바로 아래에 고르기 줄을 띄운다 (새 창에서 답 쓰기 / AI에게 맡기기) */
-   const showAct = (nr, done) => {
-    act.innerHTML = ''; act.style.display = 'flex'; clearTimeout(actT); actT = setTimeout(() => { act.style.display = 'none'; }, 90000);
+   const ansReset = () => { ansRec = null; galAnsFor = null; mi.placeholder = '질문을 입력하고 등록하세요'; };
+   /* ➤로 질문만 등록했을 때: 필기시험 창처럼 입력줄 위에 고르기 줄을 띄운다.
+      mode: 'done' 끝난 표시 · 'ai' 바로 AI에게 맡김 · 'ans' 아래 입력줄로 답 직접 쓰기 */
+   const showAct = (nr, mode) => {
+    act.innerHTML = ''; act.style.display = 'flex'; clearTimeout(actT); actT = setTimeout(() => { if (ansRec) return; act.style.display = 'none'; }, 90000);
     const lab = document.createElement('div'); lab.style.cssText = 'flex:1 0 100%;font-size:12.5px;line-height:1.5;color:var(--tx-2);overflow-wrap:anywhere'; lab.textContent = '🧠 등록한 질문: ' + nr.q.slice(0, 90) + (nr.q.length > 90 ? '…' : ''); act.append(lab);
     const mk = (t, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'm-mini'; b.textContent = t; b.onclick = fn; act.append(b); return b; };
-    if (done){ lab.textContent = '✓ AI가 답을 채웠어요 · ' + nr.q.slice(0, 60); mk('📖 새 창에서 보기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); }); mk('닫기', () => { clearTimeout(actT); act.style.display = 'none'; }); return; }
-    mk('📝 새 창에서 답 쓰기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); });
+    const closeB = () => mk('닫기', () => { clearTimeout(actT); ansReset(); act.style.display = 'none'; });
+    if (mode === 'done'){ lab.textContent = '✓ 답을 채웠어요 · ' + nr.q.slice(0, 60); mk('📖 새 창에서 보기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); }); closeB(); return; }
+    const wb = mk('✍ 답 직접 쓰기', () => {
+     ansRec = nr; galAnsFor = {rid: r.id, nid: nr.id}; clearTimeout(actT);
+     mi.placeholder = '“' + nr.q.slice(0, 24) + (nr.q.length > 24 ? '…' : '') + '”의 답을 적어 ➤로 등록하세요';
+     wb.textContent = '✍ 답 쓰는 중 · 누르면 취소'; wb.onclick = () => { ansReset(); wb.textContent = '✍ 답 직접 쓰기'; act.style.display = 'none'; }; mi.focus(); });
     const ab = mk('🤖 AI에게 맡기기', () => {
      if (!syncCfg.url){ toast('⚙ 설정 → ☁️ 구글에 백업 URL을 먼저 저장해 주세요', 5000); return; }
-     ab.disabled = true; ab.textContent = '🤖 답을 쓰는 중…'; clearTimeout(actT);
+     ansReset(); ab.disabled = true; ab.textContent = '🤖 답을 쓰는 중…'; clearTimeout(actT);
      const pr = '다음 질문에 한국어로 아래 [답변 형식]대로만 답하세요. 모르는 것을 지어내지 말고, 공식·수치는 정확히 쓰세요.\n\n[보던 기록] ' + String(r.q || '').slice(0, 300) + '\n\n[질문] ' + nr.q + FLOW_RULE + MATH_RULE;
      aiAsk(pr, 'gemini').catch(e => { if (e.message === 'NOURL') throw e; return aiAsk(pr, 'groq'); }).then(res => {
       const cur = recs.find(x => x.id === nr.id); if (!cur) return; cur.a = (String(res.answer || '').trim() + '\n\n(🤖 AI 답변 · 틀릴 수 있으니 확인하세요)').slice(0, 8000); cur.updated = new Date().toISOString(); saveRecs(); try { renderMem(); } catch(e) {} try { renderGal(); } catch(e) {}
-      toast('🤖 AI가 답을 채웠어요', 3500);
-      { const o = [...document.querySelectorAll('.gov')].find(x => x.dataset.rid === r.id); if (o && o.__showAct) o.__showAct(nr, true); }
+      toast('🤖 AI가 답을 채웠어요', 3500); { const o = live(); if (o && o.__showAct) o.__showAct(nr, 'done'); }
      }).catch(e => { if (ab.isConnected){ ab.disabled = false; ab.textContent = '🤖 AI에게 맡기기'; } toast(e.message === 'NOURL' ? '⚙ 설정 → ☁️ 구글에 백업 URL을 먼저 저장해 주세요' : '⚠ AI 답을 받지 못했어요 · ' + String(e.message).slice(0, 60), 6000); });
     });
-    mk('닫기', () => { clearTimeout(actT); act.style.display = 'none'; });
+    mk('📝 새 창에서 쓰기', () => { clearTimeout(actT); act.style.display = 'none'; goNew(nr); });
+    closeB();
+    if (mode === 'ans') wb.click(); else if (mode === 'ai') ab.click();
    };
-   const regMemo = useAI => { const t = mi.value.trim(); if (!t) return; const nr = saveMemQ(t, useAI, {cat: r.cat, linkTo: r.id});
-    if (nr){ mi.value = ''; mi.style.height = 'auto'; toast('🧠 이 기록과 이어 붙여 질문으로 등록했어요' + (useAI ? ' · AI가 답을 쓰는 중' : ''), 4000);
-     if (!useAI && !nr.a){ /* saveMemQ가 목록을 다시 그리면서 이 창도 새로 만들어졌을 수 있어, 지금 떠 있는 같은 기록 창에 띄운다 */
-      const o = [...document.querySelectorAll('.gov')].find(x => x.dataset.rid === r.id); if (o && o.__showAct) o.__showAct(nr); else showAct(nr); } } };
+   const regMemo = useAI => { const t = mi.value.trim(); if (!t) return;
+    if (ansRec){   /* 답 직접 쓰기 중: 이 입력은 등록한 질문의 답이 된다 */
+     if (useAI){ toast('답을 쓰는 중이에요 · ➤로 등록하세요'); return; }
+     const nid = ansRec.id, cur = recs.find(x => x.id === nid); ansReset(); mi.value = ''; mi.style.height = 'auto';
+     if (cur){ cur.a = (cur.a ? cur.a + '\n\n' : '') + t.slice(0, 4000); cur.updated = new Date().toISOString(); saveRecs(); try { renderMem(); } catch(e) {} try { renderGal(); } catch(e) {} toast('✍ 답을 채웠어요', 3000); const o = live(); if (o && o.__showAct) o.__showAct(cur, 'done'); }
+     return; }
+    const nr = saveMemQ(t, false, {cat: r.cat, linkTo: r.id});
+    if (nr){ mi.value = ''; mi.style.height = 'auto'; toast('🧠 이 기록과 이어 붙여 질문으로 등록했어요', 3000);
+     if (!nr.a){ /* saveMemQ가 목록을 다시 그리면서 이 창도 새로 만들어졌을 수 있어, 지금 떠 있는 같은 기록 창에 띄운다 */
+      const o = live(); if (o && o.__showAct) o.__showAct(nr, useAI ? 'ai' : undefined); else showAct(nr, useAI ? 'ai' : undefined); } } };
    mf.addEventListener('submit', e => { e.preventDefault(); regMemo(false); }); mai.onclick = () => regMemo(true);
    mi.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229 && matchMedia('(pointer:fine)').matches){ e.preventDefault(); regMemo(false); } });
    ov.__showAct = showAct; ov.append(row, rv, qIn, ta, cwrap, act, mf); document.body.append(ov); fitVV();
+   if (galAnsFor && galAnsFor.rid === r.id){ const n0 = recs.find(x => x.id === galAnsFor.nid); if (n0) showAct(n0, 'ans'); else galAnsFor = null; }
    if (!edPushed){ edPushed = true; try { history.pushState(Object.assign(stateOf(), {ed: 1}), ''); } catch(e) { edPushed = false; } }
    setMode(galEditing.has(r.id) || !r.a);
   } else if (r.a){
