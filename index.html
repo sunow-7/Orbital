@@ -718,6 +718,22 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .gm-grid.g5{grid-template-columns:repeat(5,1fr);width:min(100%,270px)}
 .gm-grid.sd4{grid-template-columns:repeat(4,1fr);width:min(100%,176px);gap:0}
 .gm-grid.sd6{grid-template-columns:repeat(6,1fr);width:min(100%,204px);gap:0}
+.gm-grid.sd9{grid-template-columns:repeat(9,1fr);width:min(100%,243px);gap:0}
+.gm-grid.sd9 .sd-cell{font-size:15px}
+.sd-cell.same{background:rgba(58,155,220,.12)}
+.stg-hd .gm-title{flex:1;min-width:0}
+.gm-lvb{border:1px solid var(--brd);background:var(--surf2);border-radius:10px;padding:3px 8px;font:inherit;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap}
+.gm-lvb.on{border-color:#3a9bdc}
+.mn-row{margin-top:6px}
+.mn-row .btn,.sd-pad .btn{padding-top:5px;padding-bottom:5px}
+.gm-row .btn.on{border-color:#3a9bdc;background:rgba(58,155,220,.14);color:var(--ink)}
+.sd-pad.n9{gap:3px}
+.sd-pad.n9 .btn{min-width:28px;padding:6px 0;font-size:14px}
+.gm-grid.mn{width:min(100%,250px);gap:2px}
+.mn-cell{aspect-ratio:1;border:0;border-radius:5px;background:linear-gradient(135deg,#b9d3ee,#9cbfe4);font:inherit;font-size:14px;font-weight:800;padding:0;cursor:pointer;color:var(--ink);-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.mn-cell.o{background:var(--surf);box-shadow:inset 0 0 0 1px var(--brd)}
+.mn-cell.boom{background:#e2574c}
+.mn-cell.n1{color:#2f7ad6}.mn-cell.n2{color:#2e9a5a}.mn-cell.n3{color:#d6453a}.mn-cell.n4{color:#5b3fb5}.mn-cell.n5{color:#a3502a}.mn-cell.n6{color:#178a8a}.mn-cell.n7,.mn-cell.n8{color:#333}
 .pr-card,.nm-cell{aspect-ratio:1;border-radius:12px;border:1px solid var(--brd);background:var(--surf2);font:inherit;font-size:24px;font-weight:700;color:var(--ink);cursor:pointer;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent;transition:transform .15s,opacity .2s}
 .pr-card:not(.open){background:linear-gradient(135deg,var(--surf2),var(--surf));border-color:var(--brd-hov)}
 .pr-card.open{background:var(--surf)}
@@ -734,6 +750,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .sd-cell.bad{color:#d94a4a;background:rgba(217,106,106,.14)}
 .sd-cell.br{border-right:2.5px solid var(--muted)}
 .sd-cell.bb{border-bottom:2.5px solid var(--muted)}
+.sd-pad{margin-top:8px}
 .sd-pad .btn{min-width:36px;padding:7px 9px;font-size:15px;font-weight:700}
 .sp-pic{max-width:300px;margin:0 auto 8px;border:1px solid var(--brd);border-radius:12px;overflow:hidden}
 .sp-pic svg{display:block;width:100%;height:auto;cursor:crosshair}
@@ -958,7 +975,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.132</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.133</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2748,8 +2765,8 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   saveRev(); pvShown = false; paintRev(); pvRev();
  }
 
- /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 미니 스도쿠 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
- const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'sdk', n: '🧮 미니 스도쿠'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}];
+ /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
+ const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'sdk', n: '🧮 스도쿠'}, {k: 'mine', n: '💣 지뢰찾기'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}];
  const GM_KEY = 'orbital_games_v1';
  let gmSt = (() => { try { const o = JSON.parse(localStorage.getItem(GM_KEY) || 'null'); return o && typeof o === 'object' ? o : {}; } catch(e) { return {}; } })(), gmMenu = false, gmSubEl = null;
  const gmSave = () => { try { localStorage.setItem(GM_KEY, JSON.stringify(gmSt)); } catch(e) {} };
@@ -2766,7 +2783,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   gmSubEl = stgEl('small', ''); h.append(t, gmSubEl); el.append(h);
   const b = stgBody(el);
   if (gmMenu){ const m = stgEl('div', 'gm-menu'); GM.forEach((x, i) => m.append(gmBtn(x.n, 'gm-pick' + (x === g ? ' on' : ''), () => { gmSt.i = i; gmMenu = false; gmSave(); pvTv(); }))); b.append(m); return; }
-  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, sdk: gmSdk, brth: gmBrth, tv: gmTv})[g.k](b);
+  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, sdk: gmSdk, mine: gmMine, brth: gmBrth, tv: gmTv})[g.k](b);
  }
 
  /* 틀린 그림 찾기: 도형으로 그림을 만들고 아래 그림의 4군데를 바꾼다 */
@@ -2868,16 +2885,33 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   gmSub(gmSt.cho.n ? '오늘 ' + gmSt.cho.ok + ' / ' + gmSt.cho.n + ' 맞음' : '');
  }
 
- /* 미니 스도쿠: 4×4(2×2칸) · 6×6(2×3칸) · 규칙만 맞으면 정답 */
+ /* 스도쿠: 초보자 4×4 · 중급자 6×6 · 고수 9×9 · 초고수 9×9(힌트 적게) · 답이 하나뿐인 문제만 */
+ const SD_LV = [{n: '초보자', d: '4×4', s: 4, keep: 6}, {n: '중급자', d: '6×6', s: 6, keep: 14}, {n: '고수', d: '9×9', s: 9, keep: 34}, {n: '초고수', d: '9×9 힌트 적게', s: 9, keep: 25}];
  let gSd = null;
- function sdNew(n){
-  const br = 2, bc = n === 4 ? 2 : 3, nb = n / br, ns = n / bc;
+ function sdCount(g, n, br, bc, lim){   /* 답 개수 세기(lim개까지) */
+  const a = g.slice(); let cnt = 0;
+  const ok = (i, v) => { const r = Math.floor(i / n), c = i % n, R = r - r % br, C = c - c % bc;
+   for (let k = 0; k < n; k++) if (a[r * n + k] === v || a[k * n + c] === v) return false;
+   for (let y = R; y < R + br; y++) for (let x = C; x < C + bc; x++) if (a[y * n + x] === v) return false; return true; };
+  const go = () => { let best = -1, bc0 = null;
+   for (let i = 0; i < n * n; i++) if (!a[i]){ const cs = []; for (let v = 1; v <= n; v++) if (ok(i, v)) cs.push(v); if (!cs.length) return; if (!bc0 || cs.length < bc0.length){ best = i; bc0 = cs; if (cs.length === 1) break; } }
+   if (best < 0){ cnt++; return; }
+   for (const v of bc0){ a[best] = v; go(); a[best] = 0; if (cnt >= lim) return; } };
+  go(); return cnt;
+ }
+ function sdNew(lv){
+  const L = SD_LV[lv] || SD_LV[0], n = L.s, br = n === 4 ? 2 : n === 6 ? 2 : 3, bc = n === 4 ? 2 : 3, nb = n / br, ns = n / bc;
   const rows = stgShuf(Array.from({length: nb}, (_, i) => i)).flatMap(B => stgShuf(Array.from({length: br}, (_, i) => B * br + i)));
   const cols = stgShuf(Array.from({length: ns}, (_, i) => i)).flatMap(S => stgShuf(Array.from({length: bc}, (_, i) => S * bc + i)));
   const nums = stgShuf(Array.from({length: n}, (_, i) => i + 1));
-  const sol = rows.map(r => cols.map(c => nums[(bc * (r % br) + Math.floor(r / br) + c) % n]));
-  const keep = n === 4 ? 6 : 15, giv = new Set(stgShuf(Array.from({length: n * n}, (_, i) => i)).slice(0, keep));
-  gSd = {n, br, bc, g: sol.flat().map((v, i) => giv.has(i) ? v : 0), fix: [...giv], sel: -1, t0: Date.now(), end: 0};
+  const base = (r, c) => (bc * (r % br) + Math.floor(r / br) + c) % n;
+  const sol = rows.map(r => cols.map(c => nums[base(r, c)])).flat(), g = sol.slice();
+  let left = n * n; const t0 = Date.now();
+  for (const i of stgShuf(Array.from({length: n * n}, (_, i) => i))){
+   if (left <= L.keep || Date.now() - t0 > 1500) break;
+   const v = g[i]; g[i] = 0; if (sdCount(g, n, br, bc, 2) === 1) left--; else g[i] = v;
+  }
+  gSd = {lv, n, br, bc, g, fix: g.map((v, i) => v ? i : -1).filter(i => i >= 0), sel: -1, t0: Date.now(), end: 0};
  }
  function sdBad(){
   const {n, br, bc, g} = gSd, bad = new Set();
@@ -2887,22 +2921,76 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   for (let R = 0; R < n; R += br) for (let C = 0; C < n; C += bc){ const a = []; for (let r = R; r < R + br; r++) for (let c = C; c < C + bc; c++) a.push(r * n + c); chk(a); }
   return bad;
  }
+ let gmLvOpen = false;
+ function gmLv(b, levels, cur, onPick, onNew){   /* 제목 줄 오른쪽 '난이도 ▾' · 누르면 난이도·새 판 고르기. 고르기 화면이면 true */
+  const hd = $('pvTv').querySelector('.stg-hd'), bt = gmBtn(levels[cur].n + ' ▾', 'gm-lvb' + (gmLvOpen ? ' on' : ''), () => { gmLvOpen = !gmLvOpen; pvTv(); });
+  if (hd && gmSubEl) hd.insertBefore(bt, gmSubEl);
+  if (!gmLvOpen) return false;
+  const m = stgEl('div', 'gm-menu');
+  levels.forEach((L, i) => m.append(gmBtn(L.n + (L.d ? ' · ' + L.d : ''), 'gm-pick' + (i === cur ? ' on' : ''), () => { gmLvOpen = false; onPick(i); pvTv(); })));
+  m.append(gmBtn('🔄 새 판', 'gm-pick', () => { gmLvOpen = false; onNew(); pvTv(); }));
+  b.append(m); return true;
+ }
  function gmSdk(b){
-  if (!gSd) sdNew(gmSt.sdn === 6 ? 6 : 4);
-  const {n, br, bc} = gSd, bad = sdBad(), g = stgEl('div', 'gm-grid sd' + n);
+  if (!gSd) sdNew(gmSt.sdl | 0);
+  const {n, br, bc} = gSd, bad = sdBad(), g = stgEl('div', 'gm-grid sd' + n), selV = gSd.sel >= 0 ? gSd.g[gSd.sel] : 0;
+  if (gmLv(b, SD_LV, gSd.lv, i => { gmSt.sdl = i; gmSave(); sdNew(i); }, () => sdNew(gSd.lv))){ gmSub(''); return; }
   gSd.g.forEach((v, i) => { const r = Math.floor(i / n), c = i % n, fx = gSd.fix.includes(i);
-   const x = stgEl('button', 'sd-cell' + (fx ? ' fix' : '') + (i === gSd.sel ? ' sel' : '') + (bad.has(i) ? ' bad' : '') + (c % bc === bc - 1 && c < n - 1 ? ' br' : '') + (r % br === br - 1 && r < n - 1 ? ' bb' : ''), v ? String(v) : ''); x.type = 'button';
-   x.onclick = e => { e.stopPropagation(); if (fx || gSd.end) return; gSd.sel = gSd.sel === i ? -1 : i; pvTv(); };
+   const x = stgEl('button', 'sd-cell' + (fx ? ' fix' : '') + (i === gSd.sel ? ' sel' : '') + (selV && v === selV && i !== gSd.sel ? ' same' : '') + (bad.has(i) ? ' bad' : '') + (c % bc === bc - 1 && c < n - 1 ? ' br' : '') + (r % br === br - 1 && r < n - 1 ? ' bb' : ''), v ? String(v) : ''); x.type = 'button';
+   x.onclick = e => { e.stopPropagation(); if (gSd.end) return; gSd.sel = gSd.sel === i ? -1 : i; pvTv(); };
    g.append(x); });
   b.append(g);
-  const pad = stgEl('div', 'gm-row sd-pad');
-  for (let k = 1; k <= n; k++) pad.append(gmBtn(String(k), 'btn', () => { if (gSd.sel < 0 || gSd.end) return; gSd.g[gSd.sel] = k;
-   if (gSd.g.every(v => v) && !sdBad().size){ gSd.end = Date.now(); gSd.sel = -1; gSd.best = gmBest('sdk' + n, gSd.end - gSd.t0); } pvTv(); }));
-  pad.append(gmBtn('⌫', 'btn', () => { if (gSd.sel >= 0 && !gSd.end){ gSd.g[gSd.sel] = 0; pvTv(); } }));
-  const opt = stgEl('div', 'gm-row');
-  opt.append(gmBtn(n === 4 ? '6×6로' : '4×4로', 'btn', () => { gmSt.sdn = n === 4 ? 6 : 4; gmSave(); sdNew(gmSt.sdn); pvTv(); }), gmBtn('새 판', 'btn' + (gSd.end ? ' primary' : ''), () => { sdNew(n); pvTv(); }));
-  if (!gSd.end) b.append(pad); b.append(opt);
-  gmSub(gSd.end ? '🎉 ' + gmSec(gSd.end - gSd.t0) + (gSd.best ? ' · 최고 기록!' : '') : (gSd.sel < 0 ? '빈칸을 눌러요' : '숫자를 골라요') + ' · ' + n + '×' + n);
+  if (!gSd.end){ const pad = stgEl('div', 'gm-row sd-pad' + (n === 9 ? ' n9' : ''));
+   for (let k = 1; k <= n; k++) pad.append(gmBtn(String(k), 'btn', () => { if (gSd.sel < 0 || gSd.end || gSd.fix.includes(gSd.sel)) return; gSd.g[gSd.sel] = k;
+    if (gSd.g.every(v => v) && !sdBad().size){ gSd.end = Date.now(); gSd.sel = -1; gSd.best = gmBest('sdk' + gSd.lv, gSd.end - gSd.t0); } pvTv(); }));
+   pad.append(gmBtn('⌫', 'btn', () => { if (gSd.sel >= 0 && !gSd.end && !gSd.fix.includes(gSd.sel)){ gSd.g[gSd.sel] = 0; pvTv(); } }));
+   b.append(pad); }
+  else { const r = stgEl('div', 'gm-row'); r.append(gmBtn('새 판 ›', 'btn primary', () => { sdNew(gSd.lv); pvTv(); })); b.append(r); }
+  const bt = gmSt.best && gmSt.best['sdk' + gSd.lv];
+  gmSub(gSd.end ? '🎉 ' + gmSec(gSd.end - gSd.t0) + (gSd.best ? ' · 최고!' : '') : (bt ? '최고 ' + gmSec(bt) : ''));
+ }
+
+ /* 지뢰찾기: 누르면 열기 · 꾹 누르거나(PC는 오른쪽 클릭) 🚩 모드에서 누르면 깃발 · 첫 칸은 항상 안전 */
+ const MN_LV = [{n: '초급', d: '8×8 · 💣10', w: 8, m: 10}, {n: '중급', d: '9×9 · 💣15', w: 9, m: 15}, {n: '고급', d: '10×10 · 💣22', w: 10, m: 22}];
+ let gMn = null;
+ function mnNew(lv){ const L = MN_LV[lv] || MN_LV[0]; gMn = {lv, w: L.w, m: L.m, mine: null, open: new Array(L.w * L.w).fill(0), flag: new Array(L.w * L.w).fill(0), flagMode: false, t0: 0, end: 0, lose: -1}; }
+ const mnNb = (i, w) => { const r = Math.floor(i / w), c = i % w, o = []; for (let y = r - 1; y <= r + 1; y++) for (let x = c - 1; x <= c + 1; x++) if ((y !== r || x !== c) && y >= 0 && x >= 0 && y < w && x < w) o.push(y * w + x); return o; };
+ function mnOpen(i){
+  const G = gMn, w = G.w;
+  if (!G.mine){ const safe = new Set([i].concat(mnNb(i, w))); G.mine = new Array(w * w).fill(0); stgShuf(Array.from({length: w * w}, (_, k) => k).filter(k => !safe.has(k))).slice(0, G.m).forEach(k => { G.mine[k] = 1; }); G.t0 = Date.now(); }
+  if (G.open[i] || G.flag[i]) return;
+  if (G.mine[i]){ G.end = Date.now(); G.lose = i; return; }
+  const st = [i];
+  while (st.length){ const k = st.pop(); if (G.open[k] || G.flag[k]) continue; G.open[k] = 1; if (!mnNb(k, w).some(j => G.mine[j])) mnNb(k, w).forEach(j => { if (!G.open[j] && !G.mine[j]) st.push(j); }); }
+  if (G.open.filter(Boolean).length === w * w - G.m){ G.end = Date.now(); G.best = gmBest('mine' + G.lv, G.end - G.t0); }
+ }
+ function mnChord(i){   /* 열린 숫자 칸을 누르면 깃발 수가 맞을 때 주변을 한꺼번에 연다 */
+  const G = gMn, nb = mnNb(i, G.w), num = nb.filter(j => G.mine[j]).length;
+  if (num && nb.filter(j => G.flag[j]).length === num) nb.forEach(j => { if (!G.end && !G.open[j] && !G.flag[j]) mnOpen(j); });
+ }
+ function gmMine(b){
+  if (!gMn) mnNew(gmSt.mnl | 0);
+  const G = gMn, w = G.w, g = stgEl('div', 'gm-grid mn'); g.style.gridTemplateColumns = 'repeat(' + w + ',1fr)';
+  if (gmLv(b, MN_LV, G.lv, i => { gmSt.mnl = i; gmSave(); mnNew(i); }, () => mnNew(G.lv))){ gmSub(''); return; }
+  const lost = G.end && G.lose >= 0;
+  for (let i = 0; i < w * w; i++){
+   const o = G.open[i], num = G.mine && o ? mnNb(i, w).filter(j => G.mine[j]).length : 0, isM = G.mine && G.mine[i];
+   const x = stgEl('button', 'mn-cell' + (o ? ' o' : '') + (i === G.lose ? ' boom' : '') + (num ? ' n' + num : ''), o ? (num || '') : G.flag[i] ? (lost && !isM ? '❌' : '🚩') : lost && isM ? '💣' : ''); x.type = 'button';
+   let lp = 0, longed = false;
+   const flag = () => { if (G.end || o) return; G.flag[i] = G.flag[i] ? 0 : 1; if (navigator.vibrate) try { navigator.vibrate(25); } catch(e) {} pvTv(); };
+   x.addEventListener('touchstart', () => { longed = false; clearTimeout(lp); lp = setTimeout(() => { longed = true; flag(); }, 420); }, {passive: true});
+   ['touchend', 'touchmove', 'touchcancel'].forEach(ev => x.addEventListener(ev, () => clearTimeout(lp), {passive: true}));
+   x.addEventListener('contextmenu', e => { e.preventDefault(); if (!longed) flag(); });
+   x.onclick = e => { e.stopPropagation(); if (longed){ longed = false; return; } if (G.end) return;
+    if (o){ mnChord(i); pvTv(); return; }
+    if (G.flagMode){ flag(); return; } if (G.flag[i]) return; mnOpen(i); pvTv(); };
+   g.append(x); }
+  b.append(g);
+  const left = G.m - G.flag.filter(Boolean).length, bt = gmSt.best && gmSt.best['mine' + G.lv], row = stgEl('div', 'gm-row mn-row');
+  if (G.end) row.append(gmBtn('새 판 ›', 'btn primary', () => { mnNew(G.lv); pvTv(); }));
+  else row.append(gmBtn('⛏ 열기', 'btn' + (G.flagMode ? '' : ' on'), () => { G.flagMode = false; pvTv(); }), gmBtn('🚩 깃발', 'btn' + (G.flagMode ? ' on' : ''), () => { G.flagMode = true; pvTv(); }));
+  b.append(row);
+  gmSub(G.end ? (lost ? '💥 펑!' : '🎉 ' + gmSec(G.end - G.t0) + (G.best ? ' · 최고!' : '')) : '💣 ' + left + (bt ? ' · 최고 ' + gmSec(bt) : ''));
  }
 
  /* 호흡 1분: 4초 들이쉬고 · 4초 멈추고 · 6초 내쉬기 × 4번 */
