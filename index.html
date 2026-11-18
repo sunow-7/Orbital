@@ -821,6 +821,9 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 .zh-bar .zh-spd{font-size:13px;white-space:nowrap}
 .zh-bar .zh-spd.on{border-color:#3a9bdc;background:rgba(58,155,220,.14)}
 .zh-bar .zh-next{flex:1;min-width:0}
+.stg-card.fill{min-height:calc(100cqh - 74px)}
+.stg-tip.big{font-size:15px;color:var(--ink);margin-top:14px}
+.stg-bar .rev-grade{flex:1;margin:0}
 .stg-dots{display:flex;justify-content:center;gap:2px;margin:0 0 10px}
 .stg-dots button{width:24px;height:20px;border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}
 .stg-dots button::after{content:'';width:7px;height:7px;border-radius:4px;background:var(--muted2);opacity:.55;transition:width .2s,opacity .2s}
@@ -1021,7 +1024,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.137</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.138</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2770,6 +2773,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
  const stgShuf = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
  const stgEl = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
  function stgHead(el, t, s){ const h = stgEl('div', 'stg-hd'); h.append(stgEl('span', '', t), stgEl('small', '', s || '')); el.append(h); }
+ function stgBar(b, ...kids){ const bar = stgEl('div', 'zh-bar stg-bar'); kids.forEach(k => bar.append(k)); b.append(bar); return bar; }   /* 아래쪽 고정 버튼 줄(엄지로 누르기 쉽게) */
  function stgBody(el){ const b = stgEl('div', 'stg-body'); el.append(b); return b; }
  function stgGo(i, dir){
   i = (i + STG.length) % STG.length; const prev = stgI; stgI = i; stgLast = Date.now();
@@ -2794,15 +2798,15 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
    const more = stgEl('button', 'btn', '더 복습하기 (+' + Math.min(REV_LIMIT, q.length) + '개)'); more.type = 'button'; more.style.cssText = 'display:block;margin:12px auto 0';
    more.onclick = () => { const t = revSt[REV_DAY] && revSt[REV_DAY].d === revToday() ? revSt[REV_DAY] : {d: revToday(), n: 0}; t.x = (t.x || 0) + REV_LIMIT; revSt[REV_DAY] = t; saveRev(); paintRev(); pvRev(); };
    d.append(more); b.append(d); return; }
-  const r = q[0], card = stgEl('div', 'stg-card');
+  const r = q[0], card = stgEl('div', 'stg-card fill');
   if (r.cat && (r.cat.p || r.cat.s)) card.append(stgEl('div', 'stg-cat', [r.cat.p, r.cat.s].filter(Boolean).join(' › ')));
   const qq = stgEl('div', 'stg-q', stripTags(r.q || '(질문 없음)')); renderMath(qq); card.append(qq); if (r.im) card.append(imgEl(r.im));
-  if (!pvShown){ card.classList.add('tap'); card.append(stgEl('div', 'stg-tip', '눌러서 답 보기 👀')); card.onclick = () => { pvShown = true; pvRev(); }; b.append(card); return; }
+  if (!pvShown){ const show = () => { pvShown = true; pvRev(); }; card.classList.add('tap'); card.onclick = show; b.append(card); stgBar(b, gmBtn('답 보기 👀', 'btn primary zh-next', show)); return; }
   const aa = stgEl('div', 'stg-a md'); renderMd(aa, stripTags(r.a || '(답 없음)')); card.append(aa); b.append(card);
   const g0 = stgEl('div', 'rev-grade'), s = revSt[r.id] || {i: 1};
   const mk = (label, cls, g, ivl) => { const x = stgEl('button', cls); x.type = 'button'; x.innerHTML = label + '<small>' + ivlLabel(ivl) + '</small>'; x.onclick = () => pvGrade(r, g); g0.append(x); };
   mk('😵 잊었어요', 'bad', 0, 1); mk('🤔 애매해요', 'mid', 1, 3); mk('😊 기억났어요', 'good', 2, revNextGood(s));
-  b.append(g0);
+  stgBar(b, g0);
  }
  function pvGrade(r, g){
   const s = revSt[r.id] || {i: 1, n: 0}, i = g === 0 ? 1 : g === 1 ? 3 : revNextGood(s);
@@ -2933,10 +2937,11 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
     gmBtn('정답 보기', 'btn', () => { if (!C.counted){ C.counted = true; gmSt.cho.n++; gmSave(); } C.res = 'show'; pvTv(); }));
    card.append(r);
   } else {
-   card.classList.add('tap'); card.append(stgEl('div', 'stg-tip', (C.res === 'ok' ? '⭕ 정답이에요' : '정답은 「' + C.w + '」') + ' · 누르면 다음 문제 ›'));
+   card.classList.add('tap'); card.append(stgEl('div', 'stg-tip big', C.res === 'ok' ? '⭕ 정답이에요' : '정답은 「' + C.w + '」'));
    card.onclick = () => { choNew(); pvTv(); };
   }
-  b.append(card);
+  card.classList.add('fill'); b.append(card);
+  if (done) stgBar(b, gmBtn('다음 문제 ›', 'btn primary zh-next', () => { choNew(); pvTv(); }));
   gmSub(gmSt.cho.n ? '오늘 ' + gmSt.cho.ok + ' / ' + gmSt.cho.n + ' 맞음' : '');
  }
 
@@ -3153,9 +3158,10 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
    bt.onclick = e => { if (tvCur.pick >= 0) return; e.stopPropagation(); tvCur.pick = i; tvSt.n = (tvSt.n || 0) + 1; if (i === tvCur.a) tvSt.ok = (tvSt.ok || 0) + 1; tvSave(); pvTv(); };
    g.append(bt); });
   card.append(g);
-  if (done){ card.classList.add('tap'); card.append(stgEl('div', 'stg-tip', (tvCur.pick === tvCur.a ? '⭕ 정답이에요' : '❌ 정답은 ' + (tvCur.a + 1) + '번') + ' · 누르면 다음 문제 ›'));
+  if (done){ card.classList.add('tap'); card.append(stgEl('div', 'stg-tip big', tvCur.pick === tvCur.a ? '⭕ 정답이에요' : '❌ 정답은 ' + (tvCur.a + 1) + '번'));
    card.onclick = () => { tvNext(); pvTv(); }; }
-  b.append(card);
+  card.classList.add('fill'); b.append(card);
+  if (done) stgBar(b, gmBtn('다음 문제 ›', 'btn primary zh-next', () => { tvNext(); pvTv(); }));
  }
 
  /* ④ 틀린 문제: 퀴즈에서 틀려 기록에 저장된 📝 문제를 무작위로 · 누르면 정답, 한 번 더 누르면 다음 문제 */
@@ -3178,9 +3184,10 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   if (r.im) card.append(imgEl(r.im));
   if (pre){ const c = stgEl('div', 'stg-chs', pre); renderMath(c); card.append(c); }
   if (wrShown){ const aa = stgEl('div', 'stg-a md'); renderMd(aa, ans || '(정답 없음)'); card.append(aa); }
-  card.append(stgEl('div', 'stg-tip', wrShown ? '누르면 다음 문제 ›' : '눌러서 정답 보기 👀'));
-  card.onclick = e => { if (e.target.closest('a')) return; if (!wrShown) wrShown = true; else { wrShown = false; wrI++; } pvWr(); };
+  const step = () => { if (!wrShown) wrShown = true; else { wrShown = false; wrI++; } pvWr(); };
+  card.classList.add('fill'); card.onclick = e => { if (e.target.closest('a')) return; step(); };
   b.append(card);
+  stgBar(b, gmBtn(wrShown ? '다음 문제 ›' : '정답 보기 👀', 'btn primary zh-next', step));
  }
 
  /* ⑤ 음악: 받아 둔 음악 파일을 이 기기에 저장(IndexedDB)해 듣기 · 다른 화면·앱으로 가도 계속 재생 */
