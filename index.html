@@ -958,7 +958,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.130</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.131</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2999,11 +2999,11 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   return muTx(['meta'], 'readonly', t => { const rq = t.objectStore('meta').getAll(); rq.onsuccess = () => { muList = (rq.result || []).sort((a, b) => a.added - b.added || (a.name < b.name ? -1 : 1)); }; })
    .then(() => { muReady = true; }).catch(e => { muReady = true; console.error(e); });
  }
- const muName = f => String(f.name || '음악').replace(/\.(mp3|m4a|aac|ogg|oga|opus|wav|flac|webm|mp4)$/i, '');
+ const muName = f => String(f.name || '음악').replace(/\.(mp3|m4a|aac|ogg|oga|opus|wav|flac|webm|mp4|m4v|3gp|mov)$/i, '');
  const muMB = n => (n / 1048576).toFixed(n < 10485760 ? 1 : 0) + 'MB';
  const muTime = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
  async function muAdd(files){
-  const fs = Array.from(files || []).filter(f => /^audio\//.test(f.type) || /\.(mp3|m4a|aac|ogg|oga|opus|wav|flac)$/i.test(f.name)); if (!fs.length){ toast('음악 파일이 없어요'); return; }
+  const fs = Array.from(files || []).filter(f => /^(audio|video)\//.test(f.type) || /\.(mp3|m4a|aac|ogg|oga|opus|wav|flac|mp4|m4v|webm|3gp|mov)$/i.test(f.name)); if (!fs.length){ toast('음악·동영상 파일이 없어요'); return; }
   let n = 0, fail = 0;
   for (const f of fs){
    if (muList.some(m => m.name === muName(f) && m.size === f.size)) continue;
@@ -3021,7 +3021,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
    if (!rec || !rec.blob){ toast('⚠ 이 곡 파일을 찾지 못했어요'); return; }
    if (muUrl) URL.revokeObjectURL(muUrl); muUrl = URL.createObjectURL(rec.blob);
    const a = muAu(); a.src = muUrl; muSt.cur = id; muSave();
-   await a.play().catch(e => { toast('▶ 다시 한 번 눌러 주세요'); });
+   await a.play().catch(e => { toast(e && e.name === 'NotSupportedError' ? '⚠ 이 파일은 소리를 꺼낼 수 없는 형식이에요' : '▶ 다시 한 번 눌러 주세요'); });
    if ('mediaSession' in navigator){ try { navigator.mediaSession.metadata = new MediaMetadata({title: m.name, artist: 'ORBITAL'}); } catch(e) {} }
   } catch(e) { console.error(e); toast('⚠ 재생하지 못했어요'); }
   if (STG[stgI] === 'mu') pvMu();
@@ -3052,10 +3052,10 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   stgHead(el, '🎵 음악', muList.length ? muList.length + '곡 · ' + muMB(tot) : '');
   const b = stgBody(el);
   if (!muReady){ b.append(stgEl('div', 'rev-done', '불러오는 중…')); muLoad().then(() => { if (STG[stgI] === 'mu') pvMu(); }); return; }
-  const fi = stgEl('input'); fi.type = 'file'; fi.accept = 'audio/*,.mp3,.m4a,.aac,.ogg,.opus,.wav,.flac'; fi.multiple = true; fi.style.display = 'none';
+  const fi = stgEl('input'); fi.type = 'file'; fi.accept = 'audio/*,video/*,.mp3,.m4a,.aac,.ogg,.opus,.wav,.flac,.mp4,.m4v,.webm,.3gp,.mov'; fi.multiple = true; fi.style.display = 'none';
   fi.onchange = () => { const f = Array.from(fi.files || []); fi.value = ''; muAdd(f); };
   const add = gmBtn('＋ 음악 넣기', 'btn' + (muList.length ? '' : ' primary'), () => fi.click());
-  if (!muList.length){ const d = stgEl('div', 'rev-done'); d.innerHTML = '🎧 아직 넣은 음악이 없어요<br><small style="color:var(--muted)">받아 둔 mp3·m4a 파일을 골라 넣으면<br>이 기기에 저장돼서 언제든 들을 수 있어요</small>'; const r = stgEl('div', 'gm-row'); r.append(add, fi); d.append(r); b.append(d); return; }
+  if (!muList.length){ const d = stgEl('div', 'rev-done'); d.innerHTML = '🎧 아직 넣은 음악이 없어요<br><small style="color:var(--muted)">받아 둔 mp3·m4a·mp4 파일을 골라 넣으면<br>이 기기에 저장돼서 언제든 들을 수 있어요</small>'; const r = stgEl('div', 'gm-row'); r.append(add, fi); d.append(r); b.append(d); return; }
   const cur = muList.find(x => x.id === muSt.cur), np = stgEl('div', 'mu-now');
   np.append(stgEl('div', 'mu-title', cur ? cur.name : '눌러서 재생해요'));
   const sk = stgEl('input', 'mu-seek'); sk.type = 'range'; sk.id = 'muSeek'; sk.min = 0; sk.step = 0.1; sk.max = 0; sk.value = 0;
