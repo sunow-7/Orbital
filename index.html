@@ -1025,7 +1025,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.139</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.140</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2695,7 +2695,8 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
  function dueQueue(){
   const today = revToday(), due = [], fresh = [];
   recs.forEach(r => { const s = revSt[r.id]; if (s){ if (s.d <= today) due.push(r); } else fresh.push(r); });
-  const deg = r => linksOf({k: 'r', id: r.id}).length;
+  const dm = new Map(); links.forEach(l => [l.a, l.b].forEach(e => { if (e && e.k === 'r') dm.set(e.id, (dm.get(e.id) || 0) + 1); }));   /* 연결 수를 한 번에 세어 둠(정렬이 빨라짐) */
+  const deg = r => dm.get(r.id) || 0;
   due.sort((a, b) => revSt[a.id].d < revSt[b.id].d ? -1 : revSt[a.id].d > revSt[b.id].d ? 1 : deg(b) - deg(a));
   fresh.sort((a, b) => deg(b) - deg(a) || new Date(a.created) - new Date(b.created));
   return due.concat(fresh);
@@ -2797,7 +2798,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   if (!q.length){ const d = stgEl('div', 'rev-done'); d.innerHTML = '✓ 지금은 복습할 기억이 없어요<br>기록을 등록하면 오늘의 기억에 들어가요'; b.append(d); return; }
   if (!left){ const d = stgEl('div', 'rev-done'); d.innerHTML = '🎉 오늘 ' + gr + '개 복습 완료!<br><small style="color:var(--muted)">남은 ' + q.length + '개는 내일 만나요</small>';
    const more = stgEl('button', 'btn', '더 복습하기 (+' + Math.min(REV_LIMIT, q.length) + '개)'); more.type = 'button'; more.style.cssText = 'display:block;margin:12px auto 0';
-   more.onclick = () => { const t = revSt[REV_DAY] && revSt[REV_DAY].d === revToday() ? revSt[REV_DAY] : {d: revToday(), n: 0}; t.x = (t.x || 0) + REV_LIMIT; revSt[REV_DAY] = t; saveRev(); paintRev(); pvRev(); };
+   more.onclick = () => { const t = revSt[REV_DAY] && revSt[REV_DAY].d === revToday() ? revSt[REV_DAY] : {d: revToday(), n: 0}; t.x = (t.x || 0) + REV_LIMIT; revSt[REV_DAY] = t; saveRev(); if (tab === 'mem') paintRev(); pvRev(); };
    d.append(more); b.append(d); return; }
   const r = q[0], card = stgEl('div', 'stg-card fill');
   if (r.cat && (r.cat.p || r.cat.s)) card.append(stgEl('div', 'stg-cat', [r.cat.p, r.cat.s].filter(Boolean).join(' › ')));
@@ -2813,7 +2814,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   const s = revSt[r.id] || {i: 1, n: 0}, i = g === 0 ? 1 : g === 1 ? 3 : revNextGood(s);
   revSt[r.id] = {d: revAddDays(i), i, n: (s.n || 0) + 1};
   const day = revSt[REV_DAY] && revSt[REV_DAY].d === revToday() ? revSt[REV_DAY] : {d: revToday(), n: 0}; day.n++; revSt[REV_DAY] = day;
-  saveRev(); pvShown = false; paintRev(); pvRev();
+  saveRev(); pvShown = false; if (tab === 'mem') paintRev(); pvRev();
  }
 
  /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 중국어 한마디 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
