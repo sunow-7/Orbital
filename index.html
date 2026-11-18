@@ -824,6 +824,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 .stg-card.fill{min-height:calc(100cqh - 74px)}
 .stg-tip.big{font-size:15px;color:var(--ink);margin-top:14px}
 .stg-bar .rev-grade{flex:1;margin:0}
+.stg-bar{background:var(--surf);margin:0 -14px;padding:10px 14px 4px;box-shadow:0 -10px 14px -6px var(--surf)}
 .stg-dots{display:flex;justify-content:center;gap:2px;margin:0 0 10px}
 .stg-dots button{width:24px;height:20px;border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}
 .stg-dots button::after{content:'';width:7px;height:7px;border-radius:4px;background:var(--muted2);opacity:.55;transition:width .2s,opacity .2s}
@@ -1024,7 +1025,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.138</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.139</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2761,7 +2762,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
    const mk = (label, cls, g, ivl) => { const b = document.createElement('button'); b.type = 'button'; b.className = cls;
     b.innerHTML = label + '<small>' + ivlLabel(ivl) + '</small>';
     b.onclick = () => gradeCur(g); gr.append(b); };
-   mk('😵 잊었어요', 'bad', 0, 1); mk('🤔 애매해요', 'mid', 1, 3); mk('😊 기억났어요', 'good', 2, revNextGood(s));
+   mk('😊 기억났어요', 'good', 2, revNextGood(s)); mk('🤔 애매해요', 'mid', 1, 3); mk('😵 잊었어요', 'bad', 0, 1);
    box.append(aa, gr);
   }
  }
@@ -2805,7 +2806,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   const aa = stgEl('div', 'stg-a md'); renderMd(aa, stripTags(r.a || '(답 없음)')); card.append(aa); b.append(card);
   const g0 = stgEl('div', 'rev-grade'), s = revSt[r.id] || {i: 1};
   const mk = (label, cls, g, ivl) => { const x = stgEl('button', cls); x.type = 'button'; x.innerHTML = label + '<small>' + ivlLabel(ivl) + '</small>'; x.onclick = () => pvGrade(r, g); g0.append(x); };
-  mk('😵 잊었어요', 'bad', 0, 1); mk('🤔 애매해요', 'mid', 1, 3); mk('😊 기억났어요', 'good', 2, revNextGood(s));
+  mk('😊 기억났어요', 'good', 2, revNextGood(s)); mk('🤔 애매해요', 'mid', 1, 3); mk('😵 잊었어요', 'bad', 0, 1);
   stgBar(b, g0);
  }
  function pvGrade(r, g){
