@@ -775,6 +775,28 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .mu-row small{font-size:11px;color:var(--muted)}
 .mu-x{border:0;background:none;color:var(--muted);font-size:13px;padding:4px 6px;cursor:pointer;border-radius:8px}
 .mu-x.sure{background:#d96a6a;color:#fff;font-weight:700}
+
+/* 넘김 화면이 열려 있을 때는 창을 키우고, 게임판을 창 크기에 맞춰 꽉 채운다 */
+.clock-stage.stg-wide{height:clamp(352px,122vw,540px)}
+.stg-body{container-type:size}
+.gm-grid.g4{width:min(100cqw,calc(100cqh - 6px),420px)}
+.gm-grid.g5{width:min(100cqw,calc(100cqh - 6px),420px)}
+.gm-grid.sd4{width:min(100cqw,calc(100cqh - 60px),300px)}
+.gm-grid.sd6{width:min(100cqw,calc(100cqh - 60px),380px)}
+.gm-grid.sd9{width:min(100cqw,calc(100cqh - 60px),440px)}
+.gm-grid.mn{width:min(100cqw,calc(100cqh - 52px),440px)}
+.pr-card{font-size:clamp(24px,8cqw,40px)}
+.nm-cell{font-size:clamp(19px,6cqw,30px)}
+.sd-cell{font-size:clamp(18px,6cqw,26px)}
+.gm-grid.sd9 .sd-cell{font-size:clamp(15px,4.6cqw,24px)}
+.mn-cell{font-size:clamp(14px,4.2cqw,20px)}
+.sd-pad{flex-wrap:nowrap}
+.sd-pad .btn{flex:1 1 0;min-width:0;max-width:56px;padding-left:0;padding-right:0;font-size:clamp(14px,4.4cqw,19px)}
+.sd-pad.n9{gap:4px}
+.sd-pad.n9 .btn{min-width:0;font-size:clamp(14px,4.2cqw,18px);padding-top:8px;padding-bottom:8px}
+.sp-pic{max-width:min(100%,calc((50cqh - 18px) * 2.5))}
+.bz-wrap{height:calc(100cqh - 52px);min-height:200px}
+.bz-orb{width:min(80cqw,calc(100cqh - 80px));height:min(80cqw,calc(100cqh - 80px))}
 .stg-dots{display:flex;justify-content:center;gap:2px;margin:0 0 10px}
 .stg-dots button{width:24px;height:20px;border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}
 .stg-dots button::after{content:'';width:7px;height:7px;border-radius:4px;background:var(--muted2);opacity:.55;transition:width .2s,opacity .2s}
@@ -975,7 +997,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.133</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.134</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2727,7 +2749,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
  function stgBody(el){ const b = stgEl('div', 'stg-body'); el.append(b); return b; }
  function stgGo(i, dir){
   i = (i + STG.length) % STG.length; const prev = stgI; stgI = i; stgLast = Date.now();
-  $('orbWrap').classList.toggle('stg-off', i !== 0);
+  $('orbWrap').classList.toggle('stg-off', i !== 0); $('clkStage').classList.toggle('stg-wide', i !== 0);
   Object.keys(STG_PANE).forEach(k => { const el = $(STG_PANE[k]), on = STG[i] === k; el.hidden = !on;
    if (on && prev !== i){ el.classList.toggle('from-l', dir < 0); el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; } });
   document.querySelectorAll('#stgDots button').forEach((b, j) => { b.classList.toggle('on', j === i); b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
