@@ -797,6 +797,21 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .sp-pic{max-width:min(100%,calc((50cqh - 18px) * 2.5))}
 .bz-wrap{height:calc(100cqh - 52px);min-height:200px}
 .bz-orb{width:min(80cqw,calc(100cqh - 80px));height:min(80cqw,calc(100cqh - 80px))}
+.cho-form{display:flex;gap:6px;margin-top:12px}
+.cho-in{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid var(--brd-hov);background:var(--surf2);font:inherit;font-size:16px;color:var(--ink)}
+.cho-msg{min-height:18px;margin-top:6px;font-size:13px;font-weight:600;color:#d96a6a;text-align:center}
+.zh-sec{margin-top:14px;padding-top:10px;border-top:1px dashed var(--brd)}
+.zh-ko{font-size:19px;font-weight:700;line-height:1.5;color:var(--ink)}
+.zh-big{font-size:clamp(26px,8cqw,38px);font-weight:600;line-height:1.35;color:var(--ink);letter-spacing:2px;font-family:"Noto Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif}
+.zh-big.trad{font-family:"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",sans-serif}
+.zh-py{font-size:16px;font-weight:600;color:#3a7bd5;margin-top:2px}
+.zh-kp{font-size:14px;color:var(--muted);margin-top:2px;font-weight:600}
+.zh-ch{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--brd)}
+.zh-ch:last-of-type{border-bottom:0}
+.zh-c{flex:none;width:52px;height:52px;border-radius:12px;background:var(--surf2);border:1px solid var(--brd);display:grid;place-items:center;font-size:32px;color:var(--ink);font-family:"Noto Sans TC","Noto Sans CJK TC",serif}
+.zh-tx{font-size:13.5px;line-height:1.5;color:var(--ink);min-width:0}
+.zh-tx b{font-size:15px;margin-right:6px}
+.zh-rad{display:inline-block;font-size:12px;font-weight:700;color:#3a7bd5;background:rgba(58,155,220,.12);border-radius:8px;padding:1px 7px}
 .stg-dots{display:flex;justify-content:center;gap:2px;margin:0 0 10px}
 .stg-dots button{width:24px;height:20px;border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}
 .stg-dots button::after{content:'';width:7px;height:7px;border-radius:4px;background:var(--muted2);opacity:.55;transition:width .2s,opacity .2s}
@@ -997,7 +1012,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.134</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.135</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2787,8 +2802,8 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   saveRev(); pvShown = false; paintRev(); pvRev();
  }
 
- /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
- const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'sdk', n: '🧮 스도쿠'}, {k: 'mine', n: '💣 지뢰찾기'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}];
+ /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 중국어 한마디 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
+ const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'zh', n: '🀄 중국어 한마디'}, {k: 'sdk', n: '🧮 스도쿠'}, {k: 'mine', n: '💣 지뢰찾기'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}];
  const GM_KEY = 'orbital_games_v1';
  let gmSt = (() => { try { const o = JSON.parse(localStorage.getItem(GM_KEY) || 'null'); return o && typeof o === 'object' ? o : {}; } catch(e) { return {}; } })(), gmMenu = false, gmSubEl = null;
  const gmSave = () => { try { localStorage.setItem(GM_KEY, JSON.stringify(gmSt)); } catch(e) {} };
@@ -2805,7 +2820,7 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   gmSubEl = stgEl('small', ''); h.append(t, gmSubEl); el.append(h);
   const b = stgBody(el);
   if (gmMenu){ const m = stgEl('div', 'gm-menu'); GM.forEach((x, i) => m.append(gmBtn(x.n, 'gm-pick' + (x === g ? ' on' : ''), () => { gmSt.i = i; gmMenu = false; gmSave(); pvTv(); }))); b.append(m); return; }
-  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, sdk: gmSdk, mine: gmMine, brth: gmBrth, tv: gmTv})[g.k](b);
+  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, zh: gmZh, sdk: gmSdk, mine: gmMine, brth: gmBrth, tv: gmTv})[g.k](b);
  }
 
  /* 틀린 그림 찾기: 도형으로 그림을 만들고 아래 그림의 4군데를 바꾼다 */
@@ -2892,19 +2907,53 @@ html[data-mode="dark"][data-theme="taegeuk"]{
   const wrong = []; [same, near, pool].forEach(a => a.forEach(x => { if (wrong.length < 3 && !wrong.includes(x)) wrong.push(x); }));
   const c = stgShuf(wrong.concat(w)); gCh = {cat, w, cw, c, a: c.indexOf(w), pick: -1};
  }
- function gmCho(b){
+ function gmCho(b){   /* 보기 없이: 직접 적어서 맞히기 · 💡 첫 글자 힌트 · 정답 보기 */
   if (!gCh) choNew(); if (!gmSt.cho || gmSt.cho.d !== revToday()){ gmSt.cho = {d: revToday(), ok: 0, n: 0}; gmSave(); }
-  const card = stgEl('div', 'stg-card'), done = gCh.pick >= 0;
-  card.append(stgEl('div', 'stg-cat', gCh.cat), stgEl('div', 'cho-big', gCh.cw));
-  const g = stgEl('div', 'stg-ch two');
-  gCh.c.forEach((x, i) => { const bt = stgEl('button', '', x); bt.type = 'button';
-   if (done){ if (i === gCh.a) bt.classList.add('ok'); else if (i === gCh.pick) bt.classList.add('no'); }
-   bt.onclick = e => { e.stopPropagation(); if (gCh.pick >= 0) return; gCh.pick = i; gmSt.cho.n++; if (i === gCh.a) gmSt.cho.ok++; gmSave(); pvTv(); };
-   g.append(bt); });
-  card.append(g);
-  if (done){ card.classList.add('tap'); card.append(stgEl('div', 'stg-tip', (gCh.pick === gCh.a ? '⭕ 정답이에요' : '❌ 정답은 ' + gCh.w) + ' · 누르면 다음 문제 ›')); card.onclick = () => { choNew(); pvTv(); }; }
+  const C = gCh, done = C.res === 'ok' || C.res === 'show', card = stgEl('div', 'stg-card');
+  card.append(stgEl('div', 'stg-cat', C.cat + ' · ' + C.w.length + '글자'), stgEl('div', 'cho-big', done ? C.w : C.hint ? C.w[0] + C.cw.slice(1) : C.cw));
+  if (!done){
+   const f = stgEl('form', 'cho-form'), inp = stgEl('input', 'cho-in'); inp.type = 'text'; inp.placeholder = '정답을 적어요'; inp.autocomplete = 'off'; inp.enterKeyHint = 'done'; inp.value = C.typed || '';
+   inp.oninput = () => { C.typed = inp.value; C.res = ''; const m = card.querySelector('.cho-msg'); if (m) m.textContent = ''; };
+   const go = stgEl('button', 'btn primary', '확인'); go.type = 'submit'; f.append(inp, go);
+   f.onsubmit = e => { e.preventDefault(); const v = inp.value.replace(/\s+/g, ''); if (!v) return;
+    if (v === C.w.replace(/\s+/g, '')){ if (!C.counted){ C.counted = true; gmSt.cho.n++; gmSt.cho.ok++; gmSave(); } C.res = 'ok'; pvTv(); }
+    else { C.res = 'no'; C.tries = (C.tries || 0) + 1; const m = card.querySelector('.cho-msg'); if (m) m.textContent = '❌ 아니에요' + (choOf(v) === C.cw ? ' · 초성은 맞아요' : '') + ' (' + C.tries + '번)'; inp.select(); } };
+   card.append(f, stgEl('div', 'cho-msg', ''));
+   const r = stgEl('div', 'gm-row');
+   r.append(gmBtn('💡 첫 글자', 'btn' + (C.hint ? ' on' : ''), () => { C.hint = true; C.typed = inp.value; pvTv(); }),
+    gmBtn('정답 보기', 'btn', () => { if (!C.counted){ C.counted = true; gmSt.cho.n++; gmSave(); } C.res = 'show'; pvTv(); }));
+   card.append(r);
+  } else {
+   card.classList.add('tap'); card.append(stgEl('div', 'stg-tip', (C.res === 'ok' ? '⭕ 정답이에요' : '정답은 「' + C.w + '」') + ' · 누르면 다음 문제 ›'));
+   card.onclick = () => { choNew(); pvTv(); };
+  }
   b.append(card);
   gmSub(gmSt.cho.n ? '오늘 ' + gmSt.cho.ok + ' / ' + gmSt.cho.n + ' 맞음' : '');
+ }
+
+ /* 중국어 한마디: 한국어 → 중국어(병음·한글 발음) → 번체자 → 한자 하나씩 부수 풀이 · 누를 때마다 한 단계씩 */
+ const ZH = [["감사합니다", "谢谢", "xièxie", "씨에시에", "謝謝"], ["안녕하세요", "你好", "nǐ hǎo", "니 하오", "你好"], ["미안합니다", "对不起", "duìbuqǐ", "뚜이부치", "對不起"], ["괜찮아요", "没关系", "méi guānxi", "메이 꽌시", "沒關係"], ["다시 만나요 (잘 가요)", "再见", "zàijiàn", "짜이찌엔", "再見"], ["처음 뵙겠습니다", "初次见面", "chūcì jiànmiàn", "추츠 찌엔미엔", "初次見面"], ["만나서 반가워요", "认识你很高兴", "rènshi nǐ hěn gāoxìng", "런스 니 헌 까오싱", "認識你很高興"], ["이거 얼마예요?", "这个多少钱？", "zhège duōshao qián?", "쩌거 뚜오샤오 치엔?", "這個多少錢？"], ["맛있어요", "很好吃", "hěn hǎochī", "헌 하오츠", "很好吃"], ["배고파요", "我饿了", "wǒ è le", "워 으어 러", "我餓了"], ["사랑해요", "我爱你", "wǒ ài nǐ", "워 아이 니", "我愛你"], ["잘 자요", "晚安", "wǎn'ān", "완안", "晚安"], ["좋은 아침이에요", "早上好", "zǎoshang hǎo", "짜오샹 하오", "早上好"], ["생일 축하해요", "生日快乐", "shēngrì kuàilè", "셩르 콰이러", "生日快樂"], ["새해 복 많이 받으세요", "新年快乐", "xīnnián kuàilè", "신니엔 콰이러", "新年快樂"], ["화장실은 어디예요?", "洗手间在哪里？", "xǐshǒujiān zài nǎlǐ?", "시쇼우지엔 짜이 나리?", "洗手間在哪裡？"], ["천천히 말해 주세요", "请说慢一点", "qǐng shuō màn yìdiǎn", "칭 슈오 만 이디엔", "請說慢一點"], ["모르겠어요", "我不知道", "wǒ bù zhīdào", "워 뿌 즈다오", "我不知道"], ["알겠어요", "我明白了", "wǒ míngbai le", "워 밍바이 러", "我明白了"], ["힘내요! (파이팅)", "加油", "jiāyóu", "지아요우", "加油"], ["물 좀 주세요", "请给我水", "qǐng gěi wǒ shuǐ", "칭 게이 워 슈에이", "請給我水"], ["오늘 날씨가 좋네요", "今天天气很好", "jīntiān tiānqì hěn hǎo", "진티엔 티엔치 헌 하오", "今天天氣很好"], ["시간이 곧 돈이다", "时间就是金钱", "shíjiān jiù shì jīnqián", "스지엔 지우 스 진치엔", "時間就是金錢"], ["천 리 길도 한 걸음부터", "千里之行，始于足下", "qiān lǐ zhī xíng, shǐ yú zú xià", "치엔 리 즈 싱, 스 위 주 시아", "千里之行，始於足下"], ["백 번 듣는 것이 한 번 보는 것만 못하다", "百闻不如一见", "bǎi wén bùrú yí jiàn", "바이 원 뿌루 이 지엔", "百聞不如一見"], ["배움에는 끝이 없다", "学无止境", "xué wú zhǐ jìng", "쉬에 우 즈 징", "學無止境"], ["수고하셨어요", "辛苦了", "xīnkǔ le", "신쿠 러", "辛苦了"], ["조심하세요", "小心", "xiǎoxīn", "샤오신", "小心"], ["축하해요", "恭喜", "gōngxǐ", "꽁시", "恭喜"], ["중국어를 배우고 있어요", "我在学中文", "wǒ zài xué zhōngwén", "워 짜이 쉬에 중원", "我在學中文"], ["전기 시험을 준비하고 있어요", "我在准备电气考试", "wǒ zài zhǔnbèi diànqì kǎoshì", "워 짜이 준뻬이 띠엔치 카오스", "我在準備電氣考試"], ["괜찮아요? (별일 없죠?)", "你没事吧？", "nǐ méishì ba?", "니 메이스 바?", "你沒事吧？"]], ZH_CH = {"謝": ["사례할 사", "言 (말씀 언)", "言 말 + 射 쏠 사(소리) → 말로 고마움을 전함"], "你": ["너 니", "人·亻 (사람인변)", "亻 사람 + 尔 너 이(소리) → 너"], "好": ["좋을 호", "女 (계집 녀)", "女 어머니 + 子 아이 → 아이를 안은 모습, 좋다"], "對": ["대할 대", "寸 (마디 촌)", "왼쪽은 촛대·받침 모양, 寸은 손 → 손으로 마주 들고 대함"], "不": ["아닐 불·부", "一 (한 일)", "꽃받침(또는 날아오른 새) 모양 → '아니다'로 빌려 씀"], "起": ["일어날 기", "走 (달릴 주)", "走 달리다 + 己 몸 기(소리) → 몸을 일으킴"], "沒": ["빠질 몰", "水·氵 (삼수변)", "氵 물 + 물속에서 손을 휘젓는 모양 → 빠지다, 없다"], "關": ["빗장·관계할 관", "門 (문 문)", "門 문 + 빗장을 꿴 모양(소리) → 문을 잠그다, 관계"], "係": ["맬 계", "人·亻 (사람인변)", "亻 사람 + 系 이을 계(소리·뜻) → 이어 매다"], "再": ["두 재", "冂 (멀경몸)", "같은 것을 한 번 더 겹쳐 쌓은 모양 → 다시"], "見": ["볼 견", "見 (볼 견)", "目 눈 + 儿 사람 → 사람이 눈으로 봄"], "初": ["처음 초", "刀 (칼 도)", "衤 옷 + 刀 칼 → 옷을 지으려 처음 천을 자름"], "次": ["버금 차", "欠 (하품 흠)", "冫 + 欠 입 벌린 사람 → 숨 고르며 다음 차례"], "面": ["낯 면", "面 (낯 면)", "얼굴 윤곽 안에 눈을 그린 모양 → 얼굴"], "認": ["알 인", "言 (말씀 언)", "言 말 + 忍 참을 인(소리) → 말로 알아보다"], "識": ["알 식", "言 (말씀 언)", "言 말 + 戠(소리) → 알다, 지식"], "很": ["패려궂을 흔", "彳 (두인변)", "彳 걷다 + 艮 그칠 간(소리) → 중국어에선 '매우'"], "高": ["높을 고", "高 (높을 고)", "높이 솟은 누각 모양"], "興": ["일 흥", "臼 (절구 구)", "여러 손이 함께 들어 올리는 모양 → 일어나다, 흥겹다"], "這": ["이 저", "辵·辶 (책받침)", "辶 가다 + 言(소리) → 중국어에선 '이것'"], "個": ["낱 개", "人·亻 (사람인변)", "亻 사람 + 固 굳을 고(소리) → 하나하나, 개"], "多": ["많을 다", "夕 (저녁 석)", "夕(고기 조각)을 두 번 겹침 → 많다"], "少": ["적을 소", "小 (작을 소)", "小 작다 + 丿 덜어냄 → 적다"], "錢": ["돈 전", "金 (쇠 금)", "金 쇠 + 戔 쌓을 전(소리) → 쇠붙이 돈"], "吃": ["말더듬을 흘", "口 (입 구)", "口 입 + 乞 빌 걸(소리) → 중국어에선 '먹다'"], "我": ["나 아", "戈 (창 과)", "날이 여럿 달린 창 모양 → '나'로 빌려 씀"], "餓": ["주릴 아", "食·飠 (밥식변)", "飠 밥 + 我(소리) → 밥이 없어 굶주림"], "了": ["마칠 료", "亅 (갈고리 궐)", "팔이 감싸인 아이 모양 → '끝나다'로 씀"], "愛": ["사랑 애", "心 (마음 심)", "爫 손 + 冖 덮다 + 心 마음 + 夊 걸음 → 마음을 건네다"], "晚": ["늦을 만", "日 (날 일)", "日 해 + 免 면할 면(소리) → 해가 빠져나간 늦은 때"], "安": ["편안 안", "宀 (갓머리)", "宀 집 + 女 여자 → 집 안이 편안함"], "早": ["이를 조", "日 (날 일)", "日 해 + 十(풀싹 모양) → 해가 막 뜬 이른 때"], "上": ["윗 상", "一 (한 일)", "기준선(一) 위에 점을 찍은 모양 → 위"], "生": ["날 생", "生 (날 생)", "땅(土)에서 싹이 돋는 모양 → 나다, 살다"], "日": ["날 일", "日 (날 일)", "해 모양"], "快": ["쾌할 쾌", "心·忄 (심방변)", "忄 마음 + 夬 터놓을 쾌(소리) → 마음이 시원함, 빠르다"], "樂": ["즐길 락·노래 악", "木 (나무 목)", "나무 받침 위의 북과 방울(악기) 모양 → 음악, 즐거움"], "新": ["새 신", "斤 (도끼 근)", "辛 + 木 나무 + 斤 도끼 → 나무를 새로 베다"], "年": ["해 년", "干 (방패 간)", "사람이 벼를 지고 가는 모양 → 한 해의 수확"], "洗": ["씻을 세", "水·氵 (삼수변)", "氵 물 + 先 먼저 선(소리) → 물로 씻다"], "手": ["손 수", "手 (손 수)", "다섯 손가락을 편 손 모양"], "間": ["사이 간", "門 (문 문)", "門 문 + 日 해 → 문틈 사이로 햇빛이 듦"], "在": ["있을 재", "土 (흙 토)", "才(소리) + 土 땅 → 땅 위에 있다"], "哪": ["어찌 나", "口 (입 구)", "口 입 + 那 어찌 나(소리) → 어느, 어디"], "裡": ["속 리", "衣·衤 (옷의변)", "衤 옷 + 里 마을 리(소리) → 옷의 안쪽, 속"], "請": ["청할 청", "言 (말씀 언)", "言 말 + 靑 푸를 청(소리) → 말로 청하다"], "說": ["말씀 설", "言 (말씀 언)", "言 말 + 兌 기쁠 태(소리) → 말하다"], "慢": ["게으를 만", "心·忄 (심방변)", "忄 마음 + 曼 끌 만(소리) → 늘어지다, 느리다"], "一": ["한 일", "一 (한 일)", "가로줄 하나"], "點": ["점 점", "黑 (검을 흑)", "黑 검다 + 占 점칠 점(소리) → 작은 검은 점"], "知": ["알 지", "矢 (화살 시)", "矢 화살 + 口 입 → 화살처럼 빠르게 알아 말함"], "道": ["길 도", "辵·辶 (책받침)", "辶 가다 + 首 머리 → 사람이 다니는 길"], "明": ["밝을 명", "日 (날 일)", "日 해 + 月 달 → 밝다"], "白": ["흰 백", "白 (흰 백)", "빛나는 모양(햇빛·쌀알 등으로 풀이) → 희다"], "加": ["더할 가", "力 (힘 력)", "力 힘 + 口 입 → 힘과 말을 보태다"], "油": ["기름 유", "水·氵 (삼수변)", "氵 물(액체) + 由 말미암을 유(소리) → 기름"], "給": ["줄 급", "糸 (실 사)", "糸 실 + 合 합할 합(소리) → 실을 이어 대 주다"], "水": ["물 수", "水 (물 수)", "흐르는 물줄기 모양"], "今": ["이제 금", "人 (사람 인)", "모아 덮은(亼) 모양 → 지금, 이제"], "天": ["하늘 천", "大 (큰 대)", "大 사람 + 머리 위 一 → 하늘"], "氣": ["기운 기", "气 (기운 기)", "气 김 + 米 쌀 → 밥 지을 때 오르는 김"], "時": ["때 시", "日 (날 일)", "日 해 + 寺 절 사(소리) → 해로 재는 때"], "就": ["나아갈 취", "尢 (절름발이 왕)", "京 높은 언덕 + 尤 → 높은 곳으로 나아감"], "是": ["옳을 시", "日 (날 일)", "日 해 + 正 바르다 → 옳다, 이다"], "金": ["쇠 금", "金 (쇠 금)", "흙 속에 광석이 묻힌 모양"], "千": ["일천 천", "十 (열 십)", "人 + 一 → 천(1000)"], "里": ["마을 리", "里 (마을 리)", "田 밭 + 土 땅 → 마을, 거리의 단위"], "之": ["갈 지", "丿 (삐침)", "발이 땅을 딛고 나아가는 모양 → 가다, ~의"], "行": ["다닐 행", "行 (다닐 행)", "사방으로 난 네거리 모양"], "始": ["비로소 시", "女 (계집 녀)", "女 + 台 별 태(소리) → 처음, 비로소"], "於": ["어조사 어", "方 (모 방)", "까마귀 모양에서 빌려 씀 → ~에서"], "足": ["발 족", "足 (발 족)", "무릎(口)과 발 모양"], "下": ["아래 하", "一 (한 일)", "기준선(一) 아래에 표시 → 아래"], "百": ["일백 백", "白 (흰 백)", "一 + 白(소리) → 백(100)"], "聞": ["들을 문", "耳 (귀 이)", "門(소리) + 耳 귀 → 문 너머로 귀 기울여 듣다"], "如": ["같을 여", "女 (계집 녀)", "女 + 口 → 말을 따르다 → 같다"], "學": ["배울 학", "子 (아들 자)", "두 손(臼)으로 셈가지(爻)를 가르치고, 지붕(冖) 아래 아이(子)가 배움"], "無": ["없을 무", "火·灬 (연화발)", "춤추는 사람 모양 → '없다'로 빌려 씀"], "止": ["그칠 지", "止 (그칠 지)", "발 모양 → 멈추다"], "境": ["지경 경", "土 (흙 토)", "土 땅 + 竟 마칠 경(소리) → 땅의 끝, 경계"], "辛": ["매울 신", "辛 (매울 신)", "날카로운 형벌 칼 모양 → 맵다, 괴롭다"], "苦": ["쓸 고", "艸·艹 (초두머리)", "艹 풀 + 古 옛 고(소리) → 쓴 풀, 괴롭다"], "小": ["작을 소", "小 (작을 소)", "작은 점 세 개"], "心": ["마음 심", "心 (마음 심)", "심장 모양"], "恭": ["공손할 공", "心·㣺 (마음심발)", "共 함께 공(소리) + 㣺 마음 → 공손하다"], "喜": ["기쁠 희", "口 (입 구)", "壴 북 + 口 입 → 북 치고 노래하며 기뻐함"], "中": ["가운데 중", "丨 (뚫을 곤)", "깃대가 한가운데를 꿰뚫은 모양"], "文": ["글월 문", "文 (글월 문)", "가슴에 새긴 무늬 모양 → 무늬, 글"], "準": ["준할 준", "水·氵 (삼수변)", "氵 물 + 隼 송골매 준(소리) → 물처럼 평평한 기준"], "備": ["갖출 비", "人·亻 (사람인변)", "亻 사람 + 화살통에 화살을 갖춘 모양 → 갖추다"], "電": ["번개 전", "雨 (비 우)", "雨 비 + 申(번개 치는 모양) → 번개, 전기"], "考": ["생각할 고", "老·耂 (늙을로엄)", "耂 노인 + 丂(소리) → 오래 생각하다, 시험"], "試": ["시험 시", "言 (말씀 언)", "言 말 + 式 법 식(소리) → 시험하다"], "事": ["일 사", "亅 (갈고리 궐)", "손에 붓(깃대)을 쥔 모양 → 일"], "吧": ["어조사 파", "口 (입 구)", "口 입 + 巴 꼬리 파(소리) → 말끝의 '~지?'"]};
+ let gZh = null;
+ function zhNext(){
+  const o = gmSt.zh || (gmSt.zh = {});
+  if (!Array.isArray(o.o) || o.o.length !== ZH.length || !(o.i < o.o.length)){ o.o = stgShuf(ZH.map((_, i) => i)); o.i = 0; }
+  gZh = {ix: o.o[o.i++], step: 0}; gmSave();
+ }
+ function gmZh(b){
+  if (!gZh) zhNext();
+  const [ko, simp, py, kp, trad] = ZH[gZh.ix], st = gZh.step, card = stgEl('div', 'stg-card tap zh');
+  card.append(stgEl('div', 'stg-cat', '한국어'), stgEl('div', 'zh-ko', ko));
+  if (st >= 1){ card.append(stgEl('div', 'stg-cat zh-sec', '중국어 (간체)'), stgEl('div', 'zh-big', simp), stgEl('div', 'zh-py', py), stgEl('div', 'zh-kp', '🔊 ' + kp)); }
+  if (st >= 2){ card.append(stgEl('div', 'stg-cat zh-sec', '번체자'), stgEl('div', 'zh-big trad', trad)); }
+  if (st >= 3){ card.append(stgEl('div', 'stg-cat zh-sec', '한자 풀이 · 부수'));
+   const seen = new Set();
+   Array.from(trad).forEach(c => { const d = ZH_CH[c]; if (!d || seen.has(c)) return; seen.add(c);
+    const row = stgEl('div', 'zh-ch'), big = stgEl('div', 'zh-c', c), tx = stgEl('div', 'zh-tx');
+    tx.append(stgEl('b', '', d[0]), stgEl('span', 'zh-rad', '부수 ' + d[1]), stgEl('div', '', d[2])); row.append(big, tx); card.append(row); }); }
+  card.append(stgEl('div', 'stg-tip', ['눌러서 중국어 보기 ›', '눌러서 번체자 보기 ›', '눌러서 한자 풀이 보기 ›', '누르면 다음 한마디 ›'][st]));
+  card.onclick = () => { if (gZh.step < 3){ gZh.step++; pvTv(); const bd = $('pvTv').querySelector('.stg-body'); if (bd && gZh.step === 3) setTimeout(() => { const ss = bd.querySelectorAll('.zh-sec'), s = ss[ss.length - 1]; if (s) bd.scrollTo({top: s.offsetTop - 8, behavior: 'smooth'}); }, 30); } else { zhNext(); pvTv(); } };
+  b.append(card);
+  gmSub((st + 1) + ' / 4');
  }
 
  /* 스도쿠: 초보자 4×4 · 중급자 6×6 · 고수 9×9 · 초고수 9×9(힌트 적게) · 답이 하나뿐인 문제만 */
