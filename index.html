@@ -796,6 +796,22 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .sd-pad.n9 .btn{min-width:0;font-size:clamp(14px,4.2cqw,18px);padding-top:8px;padding-bottom:8px}
 .sp-pic{max-width:min(100%,calc((50cqh - 18px) * 2.5))}
 .bz-wrap{height:calc(100cqh - 52px);min-height:200px}
+/* 단어 연상 방울 (v3.144) */
+.wa-field{position:relative;height:calc(100cqh - 50px);min-height:220px;max-height:560px;overflow:hidden;border-radius:16px;background:radial-gradient(circle at 50% 50%,var(--surf2),transparent 70%)}
+.wa-main{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(31cqw,130px);height:min(23cqw,27cqh,96px);min-height:56px;border-radius:999px;display:grid;place-items:center;padding:4px 8px;box-sizing:border-box;text-align:center;font-size:clamp(15px,4.6cqw,21px);font-weight:800;line-height:1.15;word-break:keep-all;color:#fff;background:linear-gradient(135deg,var(--ring2),var(--ring0));box-shadow:0 6px 18px rgba(43,127,224,.3)}
+.wa-main.done{animation:waGlow 1.2s ease-out}
+.wa-pos{position:absolute;transform:translate(-50%,-50%);z-index:1}
+.wa-b{width:min(27cqw,108px);height:min(19cqw,24cqh,80px);min-width:62px;min-height:46px;border-radius:999px;border:1.5px solid rgba(58,155,220,.45);padding:3px 7px;box-sizing:border-box;font:inherit;font-size:clamp(11.5px,3.4cqw,15px);font-weight:700;line-height:1.15;word-break:keep-all;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.95),rgba(170,215,250,.55) 45%,rgba(58,155,220,.16) 75%);box-shadow:inset -3px -5px 10px rgba(58,155,220,.18),0 3px 10px rgba(58,155,220,.15);animation:waFloat 4s ease-in-out infinite}
+.wa-b:active{transform:scale(.94)}
+.wa-b.pop{animation:waPop .36s ease-out forwards;pointer-events:none}
+.wa-b.popped{visibility:hidden}
+.wa-b.no{animation:gmShake .35s;opacity:.5;border-color:#d96a6a;background:rgba(217,106,106,.13);color:var(--muted);cursor:default}
+.wa-b.gone{animation:none;visibility:hidden}
+.wa-rest{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);width:max-content;max-width:94%;z-index:2;padding:8px 12px;border-radius:12px;border:1px solid var(--brd);background:var(--surf);font-size:12.5px;font-weight:600;line-height:1.5;color:var(--muted);text-align:center;white-space:pre-line;word-break:keep-all;animation:rise .4s}
+.wa-row .btn{padding:7px 12px;font-size:13.5px}
+@keyframes waFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes waPop{0%{transform:scale(1);opacity:1}45%{transform:scale(1.28);opacity:.9;box-shadow:0 0 0 6px rgba(58,155,220,.35)}100%{transform:scale(1.55);opacity:0;box-shadow:0 0 0 14px rgba(58,155,220,0)}}
+@keyframes waGlow{0%{box-shadow:0 0 0 0 rgba(242,183,5,.7)}100%{box-shadow:0 0 0 26px rgba(242,183,5,0)}}
 .bz-orb{width:min(80cqw,calc(100cqh - 80px));height:min(80cqw,calc(100cqh - 80px))}
 .cho-form{display:flex;gap:6px;margin-top:12px}
 .cho-in{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid var(--brd-hov);background:var(--surf2);font:inherit;font-size:16px;color:var(--ink)}
@@ -1025,7 +1041,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.143</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.144</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -2819,8 +2835,8 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   saveRev(); pvShown = false; if (tab === 'mem') paintRev(); pvRev();
  }
 
- /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 중국어 한마디 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
- const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'zh', n: '🀄 중국어 한마디'}, {k: 'sdk', n: '🧮 스도쿠'}, {k: 'mine', n: '💣 지뢰찾기'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}];
+ /* ③ 머리 식히기: 틀린 그림 찾기 · 짝 맞추기 · 숫자 순서 · 초성 퀴즈 · 중국어 한마디 · 스도쿠 · 지뢰찾기 · 호흡 1분 · 상식 퀴즈 · 단어 연상 (이 화면에 올 때마다 다음 게임 · 제목을 누르면 고르기) */
+ const GM = [{k: 'spot', n: '🔍 틀린 그림 찾기'}, {k: 'pair', n: '🃏 짝 맞추기'}, {k: 'num', n: '🔢 숫자 순서'}, {k: 'cho', n: '🔤 초성 퀴즈'}, {k: 'zh', n: '🀄 중국어 한마디'}, {k: 'sdk', n: '🧮 스도쿠'}, {k: 'mine', n: '💣 지뢰찾기'}, {k: 'brth', n: '🌬 호흡 1분'}, {k: 'tv', n: '🧩 상식 퀴즈'}, {k: 'word', n: '🫧 단어 연상'}];
  const GM_KEY = 'orbital_games_v1';
  let gmSt = (() => { try { const o = JSON.parse(localStorage.getItem(GM_KEY) || 'null'); return o && typeof o === 'object' ? o : {}; } catch(e) { return {}; } })(), gmMenu = false, gmSubEl = null;
  const gmSave = () => { try { localStorage.setItem(GM_KEY, JSON.stringify(gmSt)); } catch(e) {} };
@@ -2837,7 +2853,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   gmSubEl = stgEl('small', ''); h.append(t, gmSubEl); el.append(h);
   const b = stgBody(el);
   if (gmMenu){ const m = stgEl('div', 'gm-menu'); GM.forEach((x, i) => m.append(gmBtn(x.n, 'gm-pick' + (x === g ? ' on' : ''), () => { gmSt.i = i; gmMenu = false; gmSave(); pvTv(); }))); b.append(m); return; }
-  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, zh: gmZh, sdk: gmSdk, mine: gmMine, brth: gmBrth, tv: gmTv})[g.k](b);
+  ({spot: gmSpot, pair: gmPair, num: gmNum, cho: gmCho, zh: gmZh, sdk: gmSdk, mine: gmMine, brth: gmBrth, tv: gmTv, word: gmWord})[g.k](b);
  }
 
  /* 틀린 그림 찾기: 도형으로 그림을 만들고 아래 그림의 4군데를 바꾼다 */
@@ -2895,6 +2911,103 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   b.append(g);
   if (gPr.end){ gmSub('🎉 ' + gPr.n + '번 · ' + gmSec(gPr.end - gPr.t0) + (gPr.best ? ' · 최고 기록!' : '')); const r = stgEl('div', 'gm-row'); r.append(gmBtn('다시 하기 ›', 'btn primary', () => { prNew(); pvTv(); })); b.append(r); }
   else gmSub(gPr.n + '번 뒤집음' + (gmSt.best && gmSt.best.pair ? ' · 최고 ' + gmSt.best.pair + '번' : ''));
+ }
+
+ /* 단어 연상 방울: 가운데 단어와 이어지는 방울만 터뜨리기 (v3.144) · 일반 / 전기기사 · 같은 묶음(g)끼리는 헷갈리지 않게 함정으로 쓰지 않는다 */
+ const WA_SET = {
+  gen: [
+   ['바다', '기타', '파도 모래 갈매기 조개 등대 해수욕 소금 해변'],
+   ['겨울', '계절', '눈사람 장갑 목도리 썰매 귤 난로 입김 고드름'],
+   ['여름', '계절', '수박 선풍기 매미 장마 물놀이 빙수 모기 에어컨'],
+   ['가을', '계절', '단풍 낙엽 추수 코스모스 밤송이 독서 은행잎 허수아비'],
+   ['비', '계절', '우산 장화 무지개 천둥 우비 웅덩이 먹구름 빗소리'],
+   ['설날', '계절', '떡국 세배 세뱃돈 한복 윷놀이 차례 복주머니 귀성길'],
+   ['나무', '계절', '뿌리 가지 나뭇잎 열매 나이테 그늘 숲 껍질'],
+   ['농장', '계절', '트랙터 젖소 닭 울타리 비료 농부 밭 헛간'],
+   ['병원', '장소', '의사 간호사 주사 처방전 청진기 구급차 진료 입원'],
+   ['학교', '장소', '선생님 칠판 교과서 급식 운동장 방학 시험 숙제'],
+   ['도서관', '장소', '책 사서 열람실 대출 책장 반납 공부 조용히'],
+   ['커피', '기타', '원두 카페인 라떼 바리스타 아메리카노 머그잔 에스프레소 카페'],
+   ['축구', '활동', '골키퍼 페널티킥 월드컵 심판 코너킥 오프사이드 유니폼 슈팅'],
+   ['운동', '활동', '땀 근육 헬스장 달리기 스트레칭 줄넘기 체력 운동화'],
+   ['음악', '활동', '악보 피아노 기타 가수 리듬 콘서트 멜로디 박자'],
+   ['영화', '활동', '극장 팝콘 배우 감독 자막 예고편 매표소 스크린'],
+   ['여행', '활동', '여권 캐리어 비행기 호텔 지도 관광 기념품 휴가'],
+   ['요리', '활동', '냄비 도마 레시피 양념 프라이팬 앞치마 국자 식칼'],
+   ['생일', '기타', '케이크 촛불 선물 미역국 축하 파티 고깔모자 생일카드'],
+   ['결혼', '기타', '신부 신랑 반지 부케 웨딩드레스 주례 청첩장 신혼여행'],
+   ['우주', '기타', '행성 로켓 우주인 은하수 블랙홀 별 달 망원경'],
+   ['경찰', '기타', '순찰차 수갑 사이렌 신고 파출소 제복 112 수사'],
+   ['소방관', '기타', '소방차 호스 사다리 화재 119 방화복 구조 소화기'],
+   ['시계', '기타', '바늘 초침 알람 태엽 손목 숫자판 째깍 시간'],
+   ['컴퓨터', '기타', '키보드 마우스 모니터 인터넷 프로그램 파일 메모리 바이러스']
+  ],
+  ek: [
+   ['변압기', '기기', '철손|동손|권수비|무부하시험|단락시험|절연유|콘서베이터|부흐홀츠 계전기'],
+   ['동기발전기', '기기', '동기속도|전기자반작용|단락비|동기리액턴스|계자|병렬운전|난조|제동권선'],
+   ['유도전동기', '기기', '슬립|회전자계|농형|권선형|2차 저항|비례추이|Y-Δ 기동|원선도'],
+   ['직류기', '기기', '정류자|브러시|전기자|보극|보상권선|역기전력|타여자|직권'],
+   ['송전선로', '전력', '코로나|페란티 현상|연가|복도체|이도|가공지선|4단자 정수|충전전류'],
+   ['보호계전기', '전력', '과전류 계전기|거리 계전기|비율차동 계전기|방향 계전기|지락 계전기|한시특성|순시|변류기(CT)'],
+   ['수력발전', '전력', '취수구|제수문|스크린|침사지|조압수조|수압관|수차|방수로'],
+   ['화력발전', '전력', '보일러|과열기|재열기|절탄기|복수기|랭킨 사이클|터빈|공기예열기'],
+   ['원자력발전', '전력', '감속재|제어봉|냉각재|핵분열|경수로|증식비|반사체|차폐재'],
+   ['피뢰기', '전력', '제한전압|속류|방전개시전압|산화아연|이상전압|서지|직렬갭|절연협조'],
+   ['차단기', '전력', '아크|소호|진공차단기|SF6 가스|공기차단기|유입차단기|차단용량|재폐로'],
+   ['역률 개선', '전력', '전력용 콘덴서|진상|지상|무효전력|직렬 리액터|방전코일|cosθ|손실 감소'],
+   ['고장계산', '전력', '단락전류|%임피던스|지락전류|영상분|정상분|역상분|차단용량|대칭좌표법'],
+   ['배전', '전력', '수지식|루프식|네트워크 방식|저압 뱅킹|단상 3선식|부하율|수용률|부등률'],
+   ['정전계', '자기학', '쿨롱의 법칙|전계|전위|가우스 법칙|유전율|정전용량|전기력선|전속밀도'],
+   ['자계', '자기학', '비오-사바르|앙페르 법칙|투자율|자속밀도|자기회로|히스테리시스|인덕턴스|패러데이 법칙'],
+   ['라플라스 변환', '회로', '전달함수|최종값 정리|초기값 정리|단위계단|임펄스|s평면|부분분수|역변환'],
+   ['제어계 안정도', '회로', '루스-허위츠|나이퀴스트|이득 여유|위상 여유|근궤적|보드 선도|특성방정식|폐루프 극'],
+   ['3상 회로', '회로', '선간전압|상전압|Y결선|Δ결선|√3|2전력계법|대칭 3상|평형 부하'],
+   ['과도현상', '회로', '시정수|RL 회로|RC 회로|충전|방전|과도전류|감쇠|정상상태'],
+   ['접지', '설비', '접지저항|등전위본딩|접지극|보호도체|TN 계통|TT 계통|IT 계통|접지도체']
+  ]
+ };
+ const waList = s => s.includes('|') ? s.split('|') : s.split(' ');
+ const waNs = s => s.replace(/[\s()·\-]/g, '');
+ const waShare = (a, b, n) => { a = waNs(a); b = waNs(b); for (let i = 0; i + n <= a.length; i++) if (b.includes(a.slice(i, i + n))) return true; return false; };
+ let gWa = null;
+ function waNew(){
+  const st = gmSt.wa || (gmSt.wa = {}), mode = st.mode === 'ek' ? 'ek' : 'gen', sets = WA_SET[mode], recent = Array.isArray(st.recent) ? st.recent : [];
+  const pool = sets.filter(x => !recent.includes(x[0])), s = (pool.length ? pool : sets)[Math.random() * (pool.length || sets.length) | 0];
+  const [main, grp] = s, all = waList(s[2]), ans = stgShuf(all.slice()).slice(0, 4);
+  const bad = stgShuf(sets.filter(x => x[1] !== grp).flatMap(x => waList(x[2]).map(w => [w, x[0]])))
+   .filter(([w]) => !all.includes(w) && !waShare(w, main, 2) && !all.some(a => waShare(w, a, 3)));
+  const dec = []; bad.forEach(d => { if (dec.length < 4 && !dec.some(o => o[0] === d[0] || o[1] === d[1])) dec.push(d); });
+  const slots = stgShuf([[17, 16], [50, 14], [83, 16], [15, 50], [85, 50], [17, 84], [50, 86], [83, 84]]);
+  const items = stgShuf(ans.map(w => ({w, ok: true})).concat(dec.map(([w, from]) => ({w, ok: false, from})))).map((o, i) => Object.assign(o, {
+   x: slots[i][0] + (Math.random() * 4 - 2), y: slots[i][1] + (Math.random() * 4 - 2), du: (3 + Math.random() * 2.5).toFixed(2), de: (-Math.random() * 4).toFixed(2), st: ''}));
+  st.recent = recent.concat(main).slice(-Math.min(8, sets.length - 1)); gmSave();
+  gWa = {mode, main, rest: all.filter(w => !ans.includes(w)), items, need: ans.length, got: 0, miss: 0, t0: 0, end: 0, msg: ''};
+ }
+ function gmWord(b){
+  const st = gmSt.wa || (gmSt.wa = {}); if (!gWa || gWa.mode !== (st.mode === 'ek' ? 'ek' : 'gen')) waNew();
+  const W = gWa, f = stgEl('div', 'wa-field' + (W.end ? ' end' : ''));
+  const mc = stgEl('div', 'wa-main', W.main); if (W.end) mc.classList.add('done');
+  f.append(mc);
+  const sub = () => gmSub(W.end ? '🎉 ' + gmSec(W.end - W.t0) + ' · 실수 ' + W.miss + (W.best ? ' · 최고 기록!' : '') : W.msg || (W.got + ' / ' + W.need + ' 터뜨림' + (W.miss ? ' · 실수 ' + W.miss : '')));
+  W.items.forEach(o => {
+   const p = stgEl('div', 'wa-pos'); p.style.left = o.x + '%'; p.style.top = o.y + '%';
+   const bb = stgEl('button', 'wa-b' + (o.st ? ' ' + (o.st === 'pop' ? 'popped' : o.st) : '') + (W.end && !o.st && !o.ok ? ' gone' : ''), o.w); bb.type = 'button';
+   bb.style.animationDuration = o.du + 's'; bb.style.animationDelay = o.de + 's';
+   bb.onclick = e => { e.stopPropagation(); if (W.end || o.st) return; if (!W.t0) W.t0 = Date.now();
+    if (o.ok){ o.st = 'pop'; W.got++; W.msg = ''; bb.className = 'wa-b pop';
+     if (W.got >= W.need){ W.end = Date.now(); W.best = gmBest('wa-' + W.mode, W.end - W.t0); const d = gmSt.wa; if (d.d !== revToday()){ d.d = revToday(); d.n = 0; } d.n = (d.n || 0) + 1; gmSave(); setTimeout(() => { if (STG[stgI] === 'tv' && gmCur().k === 'word') pvTv(); }, 380); }
+    } else { o.st = 'no'; W.miss++; W.msg = '「' + o.w + '」는 「' + o.from + '」 쪽 단어예요'; bb.className = 'wa-b no'; }
+    sub(); };
+   p.append(bb); f.append(p); });
+  if (W.end) f.append(stgEl('div', 'wa-rest', (W.rest.length ? '다른 연상어 · ' + W.rest.join(' · ') : '') + (st.n ? (W.rest.length ? '\n' : '') + '오늘 ' + st.n + '단어 완료' : '')));
+  b.append(f); sub();
+  const r = stgEl('div', 'gm-row wa-row');
+  const setMode = m => { st.mode = m; st.recent = []; gmSave(); waNew(); pvTv(); };
+  r.append(gmBtn('일반', 'btn' + (W.mode === 'gen' ? ' on' : ''), () => { if (W.mode !== 'gen') setMode('gen'); }),
+   gmBtn('⚡ 전기기사', 'btn' + (W.mode === 'ek' ? ' on' : ''), () => { if (W.mode !== 'ek') setMode('ek'); }),
+   gmBtn(W.end ? '다음 단어 ›' : '건너뛰기 ›', 'btn' + (W.end ? ' primary' : ''), () => { waNew(); pvTv(); }));
+  b.append(r);
+
  }
 
  /* 숫자 순서: 1~25를 순서대로 */
