@@ -724,6 +724,8 @@ html[data-mode="dark"][data-theme="taegeuk"]{
 .stg-hd .gm-title{flex:1;min-width:0}
 .gm-lvb{border:1px solid var(--brd);background:var(--surf2);border-radius:10px;padding:3px 8px;font:inherit;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap}
 .gm-lvb.on{border-color:#3a9bdc}
+.stg-hd .gm-lvb:not(.gm-new){margin-left:auto}
+.gm-lvb.gm-new{font-size:14px;padding:2px 9px}
 .mn-row{margin-top:6px}
 .mn-row .btn,.sd-pad .btn{padding-top:5px;padding-bottom:5px}
 .gm-row .btn.on{border-color:#3a9bdc;background:rgba(58,155,220,.14);color:var(--ink)}
@@ -1041,7 +1043,7 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
 
 <div class="modal-backdrop" id="cfgBackdrop">
  <section class="modal" role="dialog" aria-modal="true" aria-label="설정">
-  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.144</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
+  <div class="cfg-head"><h3>설정 <small style="font-size:11px;color:var(--muted2);font-weight:400">v3.145</small></h3><button class="cfg-x" id="cCancel" type="button" aria-label="닫기">✕</button></div>
 
   <section class="cfg-sec">
    <h4>① ☁️ 구글에 백업</h4>
@@ -3170,6 +3172,8 @@ mark.zh-new{background:rgba(255,196,0,.38);color:inherit;border-radius:4px;paddi
   if (!gSd) sdNew(gmSt.sdl | 0);
   const {n, br, bc} = gSd, bad = sdBad(), g = stgEl('div', 'gm-grid sd' + n), selV = gSd.sel >= 0 ? gSd.g[gSd.sel] : 0;
   if (gmLv(b, SD_LV, gSd.lv, i => { gmSt.sdl = i; gmSave(); sdNew(i); }, () => sdNew(gSd.lv))){ gmSub(''); return; }
+  { const hd = $('pvTv').querySelector('.stg-hd'), lvb = hd && hd.querySelector('.gm-lvb');   /* v3.145: 새 판 버튼을 밖으로 (입력한 칸이 있으면 두 번 눌러야 바뀜) */
+   if (lvb) lvb.after(gmBtn('🔄', 'gm-lvb gm-new', () => { const t = Date.now(); if ((gSd.sure && t - gSd.sure < 3000) || gSd.end || !gSd.g.some((v, i) => v && !gSd.fix.includes(i))){ gmLvOpen = false; sdNew(gSd.lv); pvTv(); toast('🧮 새 판이에요', 1500); } else { gSd.sure = t; toast('한 번 더 누르면 새 판으로 바꿔요 · 지금 판은 사라져요', 2500); } })); }
   gSd.g.forEach((v, i) => { const r = Math.floor(i / n), c = i % n, fx = gSd.fix.includes(i);
    const x = stgEl('button', 'sd-cell' + (fx ? ' fix' : '') + (i === gSd.sel ? ' sel' : '') + (selV && v === selV && i !== gSd.sel ? ' same' : '') + (bad.has(i) ? ' bad' : '') + (c % bc === bc - 1 && c < n - 1 ? ' br' : '') + (r % br === br - 1 && r < n - 1 ? ' bb' : ''), v ? String(v) : ''); x.type = 'button';
    x.onclick = e => { e.stopPropagation(); if (gSd.end) return; gSd.sel = gSd.sel === i ? -1 : i; pvTv(); };
